@@ -1303,6 +1303,10 @@ function generateOutput(inputText) {
         }
       };
 
+      let matched = Object.entries(knownStories).find(([key]) => {
+        const patterns = key.split('|');
+        return patterns.some(p => inputText.includes(p));
+      });
       // Add dynamic story if not found
       if (!matched) {
         knownStories['盘古|开天'] = {
@@ -1328,10 +1332,6 @@ function generateOutput(inputText) {
         };
         matched = ['盘古', knownStories['盘古|开天']];
       }
-      let matched = Object.entries(knownStories).find(([key]) => {
-        const patterns = key.split('|');
-        return patterns.some(p => inputText.includes(p));
-      });
 
       const story = matched ? matched[1] : {
         title: storyTitle,
