@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a10-verify
+  labels:
+    alp-layer: action
+    alp-id: "A10"
+spec:
+  runtime: openclaw
+  displayName: "verify (A10)"
+  description: "验证与校验"
+  skills:
+    - name: data-validator
+      source: nacos
+      ref: "aliyun/skills/data-validator@v1"
+    - name: quality-checker
+      source: nacos
+      ref: "aliyun/skills/quality-checker@v1"
+  mcpServers: []

@@ -1,0 +1,8 @@
+{
+  "name": "AgentHub",
+  "version": "1.0.0",
+  "description": "ACV-v1 AgentHub — 60 个基础智能体（30 概念 + 30 动作）",
+  "created": "2026-07-21",
+  "total_agents": 60,
+  "avatar_path": "../avatar"
+}

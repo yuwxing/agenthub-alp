@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a03-search
+  labels:
+    alp-layer: action
+    alp-id: "A03"
+spec:
+  runtime: openclaw
+  displayName: "search (A03)"
+  description: "搜索与发现"
+  skills:
+    - name: web-search
+      source: nacos
+      ref: "aliyun/skills/web-search@v1"
+    - name: knowledge-search
+      source: nacos
+      ref: "aliyun/skills/knowledge-search@v1"
+  mcpServers: []

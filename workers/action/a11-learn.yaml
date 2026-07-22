@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a11-learn
+  labels:
+    alp-layer: action
+    alp-id: "A11"
+spec:
+  runtime: openclaw
+  displayName: "learn (A11)"
+  description: "学习与适应"
+  skills:
+    - name: pattern-learner
+      source: nacos
+      ref: "aliyun/skills/pattern-learner@v1"
+    - name: model-updater
+      source: nacos
+      ref: "aliyun/skills/model-updater@v1"
+  mcpServers: []

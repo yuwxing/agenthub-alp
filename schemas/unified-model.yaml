@@ -1,0 +1,250 @@
+# AgentHub ALP — UnifiedModel 数据模型定义
+# UnifiedModel 统一描述实体、数据、关系与存储
+
+models:
+  # ── Agent 智能体 ──
+  - name: "Agent"
+    description: "ALP 基础智能体原语，60 个预设实体"
+    fields:
+      - name: "id"
+        type: "string"
+        pattern: "^[CA]\\d{2}$"
+        description: "智能体唯一标识，C01-C30 概念层，A01-A30 动作层"
+      - name: "name"
+        type: "string"
+        description: "智能体英文名称标识"
+      - name: "displayName"
+        type: "string"
+        description: "智能体中⽂展示名称"
+      - name: "type"
+        type: "enum"
+        values: ["concept", "action"]
+        description: "概念层（描述世界）/ 动作层（执行操作）"
+      - name: "description"
+        type: "text"
+        description: "智能体职责描述"
+      - name: "layer"
+        type: "string"
+        compute: "type == 'concept' ? 'blue' : 'green'"
+      - name: "skills"
+        type: "relation[]"
+        target: "Skill"
+        via: "AgentSkill"
+        description: "绑定的 Skills 列表"
+      - name: "status"
+        type: "enum"
+        values: ["idle", "ready", "active", "error"]
+        default: "idle"
+
+  # ── Task 任务 ──
+  - name: "Task"
+    description: "用户发起的⼀次完整执行任务"
+    fields:
+      - name: "id"
+        type: "uuid"
+        description: "任务 ID"
+      - name: "userInput"
+        type: "text"
+        description: "用户原始自然语⾔输入"
+      - name: "parsedIntent"
+        type: "json"
+        description: "LLM 解析后的意图结构"
+      - name: "team"
+        type: "json"
+        description: "组建的 Agent 团队，[{agent_id, name, role}]"
+      - name: "dag"
+        type: "json"
+        description: "执行 DAG，[{step, worker, dependsOn[], phase}]"
+      - name: "status"
+        type: "enum"
+        values: ["pending", "running", "done", "failed", "cancelled"]
+      - name: "metrics"
+        type: "json"
+        description: "执行指标，{total_tokens, total_latency_ms, cost}"
+      - name: "createdAt"
+        type: "datetime"
+      - name: "completedAt"
+        type: "datetime"
+
+  # ── ExecutionStep 执行步骤 ──
+  - name: "ExecutionStep"
+    description: "DAG 中的单一步骤（单个 Agent 的一次执行）"
+    fields:
+      - name: "id"
+        type: "uuid"
+      - name: "taskId"
+        type: "relation"
+        target: "Task"
+      - name: "agentId"
+        type: "relation"
+        target: "Agent"
+      - name: "stepIndex"
+        type: "int"
+      - name: "phase"
+        type: "enum"
+        values: ["concept", "action"]
+        description: "阶段：概念定义 / 动作执行"
+      - name: "status"
+        type: "enum"
+        values: ["pending", "running", "done", "failed", "skipped"]
+      - name: "inputContext"
+        type: "json"
+        description: "从 Matrix 房间读取的上下文"
+      - name: "outputResult"
+        type: "json"
+        description: "Agent 执行产出"
+      - name: "thinking"
+        type: "text"
+        description: "Agent 推理过程（可观测）"
+      - name: "metrics"
+        type: "json"
+        description: "步骤指标，{tokens_used, latency_ms}"
+
+  # ── MatrixRoom Matrix 房间 ──
+  - name: "MatrixRoom"
+    description: "Agent 协作的 IM 房间"
+    fields:
+      - name: "id"
+        type: "string"
+        description: "Matrix 房间 ID"
+      - name: "taskId"
+        type: "relation"
+        target: "Task"
+      - name: "participants"
+        type: "string[]"
+        description: "房间参与者（Manager + Workers + Human）"
+      - name: "messages"
+        type: "json[]"
+        description: "房间消息历史"
+      - name: "status"
+        type: "enum"
+        values: ["active", "archived"]
+      - name: "createdAt"
+        type: "datetime"
+
+  # ── Memory 记忆 ──
+  - name: "Memory"
+    description: "Agent 的记忆单元（向量化存储）"
+    fields:
+      - name: "id"
+        type: "uuid"
+      - name: "agentId"
+        type: "relation"
+        target: "Agent"
+      - name: "type"
+        type: "enum"
+        values: ["short-term", "long-term", "episodic"]
+        description: "短期记忆 / 长期记忆 / 情景记忆"
+      - name: "content"
+        type: "text"
+        description: "记忆内容"
+      - name: "embedding"
+        type: "vector"
+        dimension: 1536
+        description: "向量嵌入（用于相似性检索）"
+      - name: "weight"
+        type: "float"
+        default: 1.0
+        description: "记忆权重（遗忘机制）"
+      - name: "lastAccessedAt"
+        type: "datetime"
+
+  # ── Knowledge 知识 ──
+  - name: "Knowledge"
+    description: "知识库文档（RAG 检索）"
+    fields:
+      - name: "id"
+        type: "uuid"
+      - name: "source"
+        type: "string"
+        description: "知识来源（文件/URL/用户输入）"
+      - name: "title"
+        type: "string"
+      - name: "content"
+        type: "text"
+      - name: "chunkIndex"
+        type: "int"
+        description: "文档分片序号"
+      - name: "embedding"
+        type: "vector"
+        dimension: 1536
+      - name: "metadata"
+        type: "json"
+
+  # ── Skill 技能 ──
+  - name: "Skill"
+    description: "Agent 可调用的具体操作能力"
+    fields:
+      - name: "id"
+        type: "uuid"
+      - name: "name"
+        type: "string"
+      - name: "version"
+        type: "string"
+      - name: "description"
+        type: "text"
+      - name: "source"
+        type: "enum"
+        values: ["nacos", "aliyun", "custom", "mcp"]
+        description: "技能来源"
+      - name: "endpoint"
+        type: "string"
+        description: "调用地址"
+      - name: "parameters"
+        type: "json"
+        description: "入参 Schema"
+      - name: "outputs"
+        type: "json"
+        description: "出参 Schema"
+      - name: "status"
+        type: "enum"
+        values: ["active", "deprecated", "disabled"]
+
+  # ── AgentSkill 绑定 ──
+  - name: "AgentSkill"
+    description: "Agent 与 Skill 的多对多绑定"
+    fields:
+      - name: "agentId"
+        type: "relation"
+        target: "Agent"
+      - name: "skillId"
+        type: "relation"
+        target: "Skill"
+      - name: "priority"
+        type: "int"
+        description: "Skills 优先级排序"
+      - name: "createdAt"
+        type: "datetime"
+    primaryKey: ["agentId", "skillId"]
+
+  # ── AuditLog 审计日志 ──
+  - name: "AuditLog"
+    description: "全量操作审计记录"
+    fields:
+      - name: "id"
+        type: "uuid"
+      - name: "taskId"
+        type: "relation"
+        target: "Task"
+      - name: "agentId"
+        type: "relation"
+        target: "Agent"
+      - name: "action"
+        type: "string"
+        description: "操作类型"
+      - name: "detail"
+        type: "json"
+      - name: "createdAt"
+        type: "datetime"
+
+# ── 数据关系图 ──
+# 
+# Agent ──< AgentSkill >── Skill
+#   │
+#   └──< ExecutionStep >── Task
+#         │
+#         └── MatrixRoom (实时协作)
+#
+# Memory      ── Agent (向量检索)
+# Knowledge   ── 独立 (RAG 检索)
+# AuditLog    ── Task + Agent (审计)

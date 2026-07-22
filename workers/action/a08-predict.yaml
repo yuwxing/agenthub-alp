@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a08-predict
+  labels:
+    alp-layer: action
+    alp-id: "A08"
+spec:
+  runtime: openclaw
+  displayName: "predict (A08)"
+  description: "预测未来趋势"
+  skills:
+    - name: time-series-forecast
+      source: nacos
+      ref: "aliyun/skills/time-series-forecast@v1"
+    - name: regression-model
+      source: nacos
+      ref: "aliyun/skills/regression-model@v1"
+  mcpServers: []

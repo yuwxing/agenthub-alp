@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a27-monitor
+  labels:
+    alp-layer: action
+    alp-id: "A27"
+spec:
+  runtime: openclaw
+  displayName: "monitor (A27)"
+  description: "持续观察系统运行状态并管理告警"
+  skills:
+    - name: "monitor"
+      source: nacos
+      ref: "aliyun/skills/monitor@v1"
+    - name: "alert-manager"
+      source: nacos
+      ref: "aliyun/skills/alert-manager@v1"
+  mcpServers: []

@@ -1,0 +1,7 @@
+{
+  "description": "跨智能体通信",
+  "name": "communicate",
+  "id": "A15",
+  "avatar": "../../avatar/action-communicate.png",
+  "type": "action"
+}

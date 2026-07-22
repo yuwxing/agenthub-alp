@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a19-classify
+  labels:
+    alp-layer: action
+    alp-id: "A19"
+spec:
+  runtime: openclaw
+  displayName: "classify (A19)"
+  description: "对数据进行分类与分组判断"
+  skills:
+    - name: "classifier"
+      source: nacos
+      ref: "aliyun/skills/classifier@v1"
+    - name: "categorizer"
+      source: nacos
+      ref: "aliyun/skills/categorizer@v1"
+  mcpServers: []

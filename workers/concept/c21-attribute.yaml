@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c21-attribute
+  labels:
+    alp-layer: concept
+    alp-id: "C21"
+spec:
+  runtime: openclaw
+  displayName: "Attribute (C21)"
+  description: "对象特征"
+  skills:
+    - name: "attribute-extractor"
+      source: nacos
+      ref: "aliyun/skills/attribute-extractor@v1"
+    - name: "feature-analysis"
+      source: nacos
+      ref: "aliyun/skills/feature-analysis@v1"
+  mcpServers: []

@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c07-memory
+  labels:
+    alp-layer: concept
+    alp-id: "C07"
+spec:
+  runtime: openclaw
+  displayName: "memory (C07)"
+  description: "短期与长期记忆管理"
+  skills:
+    - name: vector-store
+      source: nacos
+      ref: "aliyun/skills/vector-store@v1"
+    - name: similarity-search
+      source: nacos
+      ref: "aliyun/skills/similarity-search@v1"
+  mcpServers: []

@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c02-goal
+  labels:
+    alp-layer: concept
+    alp-id: "C02"
+spec:
+  runtime: openclaw
+  displayName: "goal (C02)"
+  description: "目标定义与达成标准"
+  skills:
+    - name: goal-definition
+      source: nacos
+      ref: "aliyun/skills/goal-definition@v1"
+    - name: kpi-parser
+      source: nacos
+      ref: "aliyun/skills/kpi-parser@v1"
+  mcpServers: []

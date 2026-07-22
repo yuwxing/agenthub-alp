@@ -1,0 +1,16 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c01-agent
+  labels:
+    alp-layer: concept
+    alp-id: "C01"
+spec:
+  runtime: openclaw
+  displayName: "agent (C01)"
+  description: "智能体自身的描述与元数据"
+  skills:
+    - name: agent-meta-query
+      source: nacos
+      ref: "aliyun/skills/agent-meta-query@v1"
+  mcpServers: []

@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a29-evolve
+  labels:
+    alp-layer: action
+    alp-id: "A29"
+spec:
+  runtime: openclaw
+  displayName: "evolve (A29)"
+  description: "自我改进与性能优化分析"
+  skills:
+    - name: "self-improver"
+      source: nacos
+      ref: "aliyun/skills/self-improver@v1"
+    - name: "performance-analyzer"
+      source: nacos
+      ref: "aliyun/skills/performance-analyzer@v1"
+  mcpServers: []

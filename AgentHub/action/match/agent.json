@@ -1,0 +1,7 @@
+{
+  "description": "找关联对象",
+  "name": "match",
+  "id": "A20",
+  "avatar": "../../avatar/action-match.png",
+  "type": "action"
+}

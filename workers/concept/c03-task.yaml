@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c03-task
+  labels:
+    alp-layer: concept
+    alp-id: "C03"
+spec:
+  runtime: openclaw
+  displayName: "task (C03)"
+  description: "可执行的工作单元"
+  skills:
+    - name: task-decomposition
+      source: nacos
+      ref: "aliyun/skills/task-decomposition@v1"
+    - name: priority-assign
+      source: nacos
+      ref: "aliyun/skills/priority-assign@v1"
+  mcpServers: []

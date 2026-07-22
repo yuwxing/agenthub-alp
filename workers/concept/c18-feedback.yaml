@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c18-feedback
+  labels:
+    alp-layer: concept
+    alp-id: "C18"
+spec:
+  runtime: openclaw
+  displayName: "Feedback (C18)"
+  description: "反馈收集与闭环"
+  skills:
+    - name: "feedback-collector"
+      source: nacos
+      ref: "aliyun/skills/feedback-collector@v1"
+    - name: "loop-closure"
+      source: nacos
+      ref: "aliyun/skills/loop-closure@v1"
+  mcpServers: []

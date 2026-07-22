@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c27-confidence
+  labels:
+    alp-layer: concept
+    alp-id: "C27"
+spec:
+  runtime: openclaw
+  displayName: "Confidence (C27)"
+  description: "结果可信程度"
+  skills:
+    - name: "confidence-scorer"
+      source: nacos
+      ref: "aliyun/skills/confidence-scorer@v1"
+    - name: "uncertainty-estimator"
+      source: nacos
+      ref: "aliyun/skills/uncertainty-estimator@v1"
+  mcpServers: []

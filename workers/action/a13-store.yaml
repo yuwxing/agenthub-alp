@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a13-store
+  labels:
+    alp-layer: action
+    alp-id: "A13"
+spec:
+  runtime: openclaw
+  displayName: "store (A13)"
+  description: "存储数据"
+  skills:
+    - name: data-persister
+      source: nacos
+      ref: "aliyun/skills/data-persister@v1"
+    - name: archive-manager
+      source: nacos
+      ref: "aliyun/skills/archive-manager@v1"
+  mcpServers: []

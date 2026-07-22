@@ -1,0 +1,7 @@
+{
+  "description": "检索已存信息",
+  "name": "retrieve",
+  "id": "A14",
+  "avatar": "../../avatar/action-retrieve.png",
+  "type": "action"
+}

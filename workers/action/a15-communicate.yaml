@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a15-communicate
+  labels:
+    alp-layer: action
+    alp-id: "A15"
+spec:
+  runtime: openclaw
+  displayName: "communicate (A15)"
+  description: "跨智能体通信"
+  skills:
+    - name: message-relay
+      source: nacos
+      ref: "aliyun/skills/message-relay@v1"
+    - name: broadcast-manager
+      source: nacos
+      ref: "aliyun/skills/broadcast-manager@v1"
+  mcpServers: []

@@ -1,0 +1,7 @@
+{
+  "description": "生成内容",
+  "name": "generate",
+  "id": "A09",
+  "avatar": "../../avatar/action-generate.png",
+  "type": "action"
+}

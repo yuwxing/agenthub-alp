@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c20-intent
+  labels:
+    alp-layer: concept
+    alp-id: "C20"
+spec:
+  runtime: openclaw
+  displayName: "Intent (C20)"
+  description: "用户真正目的"
+  skills:
+    - name: "intent-classification"
+      source: nacos
+      ref: "aliyun/skills/intent-classification@v1"
+    - name: "goal-inference"
+      source: nacos
+      ref: "aliyun/skills/goal-inference@v1"
+  mcpServers: []

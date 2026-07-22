@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c25-constraint
+  labels:
+    alp-layer: concept
+    alp-id: "C25"
+spec:
+  runtime: openclaw
+  displayName: "Constraint (C25)"
+  description: "限制条件"
+  skills:
+    - name: "constraint-validator"
+      source: nacos
+      ref: "aliyun/skills/constraint-validator@v1"
+    - name: "boundary-checker"
+      source: nacos
+      ref: "aliyun/skills/boundary-checker@v1"
+  mcpServers: []

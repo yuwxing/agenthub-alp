@@ -1,0 +1,25 @@
+# OS
+Thumbs.db
+.DS_Store
+~$*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.log
+
+# Node
+node_modules/
+
+# Wrangler / Cloudflare
+.wrangler/
+
+# Temp
+server_out.log
+server_err.log
+*.tmp
+
+# Word temp files
+~$*.docx

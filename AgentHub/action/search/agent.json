@@ -1,0 +1,7 @@
+{
+  "description": "搜索与发现",
+  "name": "search",
+  "id": "A03",
+  "avatar": "../../avatar/action-search.png",
+  "type": "action"
+}

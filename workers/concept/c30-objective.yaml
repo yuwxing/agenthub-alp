@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c30-objective
+  labels:
+    alp-layer: concept
+    alp-id: "C30"
+spec:
+  runtime: openclaw
+  displayName: "Objective (C30)"
+  description: "可衡量的目标结果"
+  skills:
+    - name: "objective-definer"
+      source: nacos
+      ref: "aliyun/skills/objective-definer@v1"
+    - name: "kpi-tracker"
+      source: nacos
+      ref: "aliyun/skills/kpi-tracker@v1"
+  mcpServers: []

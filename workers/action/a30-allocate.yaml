@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a30-allocate
+  labels:
+    alp-layer: action
+    alp-id: "A30"
+spec:
+  runtime: openclaw
+  displayName: "allocate (A30)"
+  description: "分配资源、任务与计算能力"
+  skills:
+    - name: "resource-allocator"
+      source: nacos
+      ref: "aliyun/skills/resource-allocator@v1"
+    - name: "load-balancer"
+      source: nacos
+      ref: "aliyun/skills/load-balancer@v1"
+  mcpServers: []

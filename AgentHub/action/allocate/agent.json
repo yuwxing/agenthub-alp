@@ -1,0 +1,7 @@
+{
+  "name": "allocate",
+  "description": "分配资源、任务、计算能力；多Agent协作核心动作",
+  "avatar": "../../avatar/action-allocate.png",
+  "type": "action",
+  "id": "A30"
+}

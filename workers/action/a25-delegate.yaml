@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a25-delegate
+  labels:
+    alp-layer: action
+    alp-id: "A25"
+spec:
+  runtime: openclaw
+  displayName: "delegate (A25)"
+  description: "将任务分配给合适的执行者"
+  skills:
+    - name: "task-delegator"
+      source: nacos
+      ref: "aliyun/skills/task-delegator@v1"
+    - name: "assigner"
+      source: nacos
+      ref: "aliyun/skills/assigner@v1"
+  mcpServers: []

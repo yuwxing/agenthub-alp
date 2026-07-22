@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c12-user
+  labels:
+    alp-layer: concept
+    alp-id: "C12"
+spec:
+  runtime: openclaw
+  displayName: "user (C12)"
+  description: "人类用户的画像与偏好"
+  skills:
+    - name: user-profiling
+      source: nacos
+      ref: "aliyun/skills/user-profiling@v1"
+    - name: preference-learning
+      source: nacos
+      ref: "aliyun/skills/preference-learning@v1"
+  mcpServers: []

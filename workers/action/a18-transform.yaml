@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a18-transform
+  labels:
+    alp-layer: action
+    alp-id: "A18"
+spec:
+  runtime: openclaw
+  displayName: "transform (A18)"
+  description: "执行数据格式转换与字段映射"
+  skills:
+    - name: "format-converter"
+      source: nacos
+      ref: "aliyun/skills/format-converter@v1"
+    - name: "data-mapper"
+      source: nacos
+      ref: "aliyun/skills/data-mapper@v1"
+  mcpServers: []

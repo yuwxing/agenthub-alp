@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a22-optimize
+  labels:
+    alp-layer: action
+    alp-id: "A22"
+spec:
+  runtime: openclaw
+  displayName: "optimize (A22)"
+  description: "寻找并推荐最优解决方案"
+  skills:
+    - name: "optimizer"
+      source: nacos
+      ref: "aliyun/skills/optimizer@v1"
+    - name: "solver"
+      source: nacos
+      ref: "aliyun/skills/solver@v1"
+  mcpServers: []

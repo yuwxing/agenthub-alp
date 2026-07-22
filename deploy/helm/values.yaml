@@ -1,0 +1,115 @@
+# AgentHub ALP — AgentTeams Helm Values
+# 部署配置文件
+# 使用方式:
+#   helm install agentteams higress.io/agentteams \
+#     -n agentteams-system --create-namespace \
+#     -f values.yaml
+
+global:
+  imageRegistry: "higress-registry.cn-hangzhou.cr.aliyuncs.com/higress"
+
+credentials:
+  llmProvider: "openai-compat"
+  llmApiKey: "${DEEPSEEK_API_KEY}"
+  llmBaseUrl: "https://api.deepseek.com/v1"
+  defaultModel: "deepseek-chat"
+  adminPassword: "${ADMIN_PASSWORD}"
+
+gateway:
+  publicURL: "https://agenthub.we-aigo.cn"
+
+# ── Manager 配置 ──
+manager:
+  runtime: "openclaw"
+  replicas: 1
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+  # Manager 注入 ALP 智能体定义
+  extraEnv:
+    - name: "ALP_AGENT_COUNT"
+      value: "60"
+  skills:
+    - name: "alp-intent-parser"
+      source: nacos
+      ref: "agentteams/skills/alp-intent-parser@v1"
+    - name: "alp-dag-builder"
+      source: nacos
+      ref: "agentteams/skills/alp-dag-builder@v1"
+
+# ── Worker 默认配置 ──
+worker:
+  defaultRuntime: "openclaw"
+  replicas: 0  # Worker 按需创建
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  # Worker 通过 consumer token 访问，Worker 本身看不见真实凭证
+  security:
+    credentialIsolation: true
+
+# ── Nacos Skills 注册中心 ──
+nacos:
+  enabled: true
+  skills:
+    registry: "alp-skills"
+    autoSync: true  # 启动时自动同步 Skills
+
+# ── 持久化存储 ──
+storage:
+  minio:
+    enabled: true
+    size: 50Gi
+    bucket: "alp-workspace"
+  polarDB:
+    enabled: true
+    # 外部 PolarDB 连接信息
+    external:
+      host: "${POLARDB_HOST}"
+      port: 5432
+      database: "agenthub_alp"
+      username: "${POLARDB_USER}"
+      password: "${POLARDB_PASSWORD}"
+      ssl: true
+
+# ── 可观测性 ──
+observability:
+  agentLoop:
+    enabled: true
+    endpoint: "http://agentloop:4318"
+  metrics:
+    enabled: true
+  tracing:
+    enabled: true
+    samplingRate: 0.1
+
+# ── 消息队列 ──
+rocketMQ:
+  enabled: true
+  external:
+    endpoint: "${ROCKETMQ_ENDPOINT}"
+    accessKey: "${ROCKETMQ_ACCESS_KEY}"
+    secretKey: "${ROCKETMQ_SECRET_KEY}"
+  topics:
+    - name: "alp-task-event"
+      queueNum: 8
+    - name: "alp-step-event"
+      queueNum: 8
+    - name: "alp-human-intervention"
+      queueNum: 4
+
+# ── 预检 ──
+preflight:
+  llm:
+    enabled: true
+    strict: true
+    timeoutSeconds: 30
+    retries: 2

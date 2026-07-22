@@ -1,0 +1,7 @@
+{
+  "description": "更新现有数据",
+  "name": "update",
+  "id": "A12",
+  "avatar": "../../avatar/action-update.png",
+  "type": "action"
+}

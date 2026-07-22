@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c19-context
+  labels:
+    alp-layer: concept
+    alp-id: "C19"
+spec:
+  runtime: openclaw
+  displayName: "Context (C19)"
+  description: "当前环境与任务背景"
+  skills:
+    - name: "context-extraction"
+      source: nacos
+      ref: "aliyun/skills/context-extraction@v1"
+    - name: "session-manager"
+      source: nacos
+      ref: "aliyun/skills/session-manager@v1"
+  mcpServers: []

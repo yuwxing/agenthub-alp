@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c14-time
+  labels:
+    alp-layer: concept
+    alp-id: "C14"
+spec:
+  runtime: openclaw
+  displayName: "time (C14)"
+  description: "时间相关的调度与约束"
+  skills:
+    - name: time-scheduler
+      source: nacos
+      ref: "aliyun/skills/time-scheduler@v1"
+    - name: deadline-manager
+      source: nacos
+      ref: "aliyun/skills/deadline-manager@v1"
+  mcpServers: []

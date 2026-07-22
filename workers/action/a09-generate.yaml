@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a09-generate
+  labels:
+    alp-layer: action
+    alp-id: "A09"
+spec:
+  runtime: openclaw
+  displayName: "generate (A09)"
+  description: "生成内容"
+  skills:
+    - name: report-generator
+      source: nacos
+      ref: "aliyun/skills/report-generator@v1"
+    - name: content-creator
+      source: nacos
+      ref: "aliyun/skills/content-creator@v1"
+  mcpServers: []

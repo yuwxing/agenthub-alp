@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a20-match
+  labels:
+    alp-layer: action
+    alp-id: "A20"
+spec:
+  runtime: openclaw
+  displayName: "match (A20)"
+  description: "查找并关联匹配的目标对象"
+  skills:
+    - name: "matcher"
+      source: nacos
+      ref: "aliyun/skills/matcher@v1"
+    - name: "correlator"
+      source: nacos
+      ref: "aliyun/skills/correlator@v1"
+  mcpServers: []

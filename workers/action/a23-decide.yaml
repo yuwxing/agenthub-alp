@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a23-decide
+  labels:
+    alp-layer: action
+    alp-id: "A23"
+spec:
+  runtime: openclaw
+  displayName: "decide (A23)"
+  description: "综合评估并做出方案选择"
+  skills:
+    - name: "decision-maker"
+      source: nacos
+      ref: "aliyun/skills/decision-maker@v1"
+    - name: "recommender"
+      source: nacos
+      ref: "aliyun/skills/recommender@v1"
+  mcpServers: []

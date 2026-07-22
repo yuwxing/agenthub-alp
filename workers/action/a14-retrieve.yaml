@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a14-retrieve
+  labels:
+    alp-layer: action
+    alp-id: "A14"
+spec:
+  runtime: openclaw
+  displayName: "retrieve (A14)"
+  description: "检索已存信息"
+  skills:
+    - name: information-retriever
+      source: nacos
+      ref: "aliyun/skills/information-retriever@v1"
+    - name: cache-query
+      source: nacos
+      ref: "aliyun/skills/cache-query@v1"
+  mcpServers: []

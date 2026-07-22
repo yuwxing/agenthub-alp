@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c08-knowledge
+  labels:
+    alp-layer: concept
+    alp-id: "C08"
+spec:
+  runtime: openclaw
+  displayName: "knowledge (C08)"
+  description: "领域知识与规则库"
+  skills:
+    - name: knowledge-retrieval
+      source: nacos
+      ref: "aliyun/skills/knowledge-retrieval@v1"
+    - name: rag-pipeline
+      source: nacos
+      ref: "aliyun/skills/rag-pipeline@v1"
+  mcpServers: []

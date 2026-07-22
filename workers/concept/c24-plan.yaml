@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c24-plan
+  labels:
+    alp-layer: concept
+    alp-id: "C24"
+spec:
+  runtime: openclaw
+  displayName: "Plan (C24)"
+  description: "达成目标的路径"
+  skills:
+    - name: "plan-generator"
+      source: nacos
+      ref: "aliyun/skills/plan-generator@v1"
+    - name: "dependency-analyzer"
+      source: nacos
+      ref: "aliyun/skills/dependency-analyzer@v1"
+  mcpServers: []

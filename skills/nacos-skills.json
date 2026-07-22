@@ -1,0 +1,609 @@
+{
+  "skills": [
+    {
+      "name": "agent-meta-query",
+      "version": "v1",
+      "description": "查询智能体自身的描述信息与元数据",
+      "source": "nacos",
+      "endpoint": "mcp://agentteams-manager:8000/mcp",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "agentId": { "type": "string", "description": "智能体 ID" }
+        },
+        "required": ["agentId"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+          "skills": { "type": "array" }
+        }
+      }
+    },
+    {
+      "name": "goal-definition",
+      "version": "v1",
+      "description": "根据用户需求定义可衡量的目标与 KPI",
+      "source": "nacos",
+      "endpoint": "mcp://agentteams-manager:8000/mcp",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "userInput": { "type": "string", "description": "用户自然语言输入" },
+          "constraints": { "type": "array", "description": "限制条件" }
+        },
+        "required": ["userInput"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "goal": { "type": "string" },
+          "kpis": { "type": "array" },
+          "successCriteria": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "task-decomposition",
+      "version": "v1",
+      "description": "将目标拆解为可执行的子任务",
+      "source": "nacos",
+      "endpoint": "mcp://agentteams-manager:8000/mcp",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "goal": { "type": "string" },
+          "maxSubtasks": { "type": "integer", "default": 10 }
+        },
+        "required": ["goal"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "tasks": { "type": "array" },
+          "dependencies": { "type": "object" }
+        }
+      }
+    },
+    {
+      "name": "entity-recognition",
+      "version": "v1",
+      "description": "从文本中识别业务实体与对象",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" },
+          "entityTypes": { "type": "array" }
+        },
+        "required": ["text"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "entities": { "type": "array" },
+          "relationships": { "type": "array" }
+        }
+      }
+    },
+    {
+      "name": "state-tracker",
+      "version": "v1",
+      "description": "追踪实体或系统的当前状态",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entityId": { "type": "string" },
+          "stateFields": { "type": "array" }
+        },
+        "required": ["entityId"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "state": { "type": "object" },
+          "changedAt": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "vector-store",
+      "version": "v1",
+      "description": "将内容向量化存储到 PolarDB pgvector",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "content": { "type": "string" },
+          "metadata": { "type": "object" },
+          "memoryType": { "type": "string", "enum": ["short-term", "long-term"] }
+        },
+        "required": ["content"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "memoryId": { "type": "string" },
+          "embeddingDim": { "type": "integer" }
+        }
+      }
+    },
+    {
+      "name": "similarity-search",
+      "version": "v1",
+      "description": "向量相似性搜索，检索相关记忆",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "topK": { "type": "integer", "default": 5 },
+          "threshold": { "type": "number", "default": 0.7 }
+        },
+        "required": ["query"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "results": { "type": "array" },
+          "totalCount": { "type": "integer" }
+        }
+      }
+    },
+    {
+      "name": "knowledge-retrieval",
+      "version": "v1",
+      "description": "从知识库检索相关领域知识（RAG）",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "topK": { "type": "integer", "default": 3 }
+        },
+        "required": ["query"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "chunks": { "type": "array" },
+          "relevanceScores": { "type": "array" }
+        }
+      }
+    },
+    {
+      "name": "data-query",
+      "version": "v1",
+      "description": "查询 PolarDB 中的结构化数据",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "sql": { "type": "string" },
+          "params": { "type": "object" },
+          "limit": { "type": "integer", "default": 100 }
+        },
+        "required": ["sql"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "columns": { "type": "array" },
+          "rows": { "type": "array" },
+          "rowCount": { "type": "integer" }
+        }
+      }
+    },
+    {
+      "name": "statistical-analysis",
+      "version": "v1",
+      "description": "执行数据统计分析（均值、方差、趋势、分布）",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "array" },
+          "analysisType": { "type": "string", "enum": ["descriptive", "trend", "correlation", "distribution"] }
+        },
+        "required": ["data", "analysisType"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "statistics": { "type": "object" },
+          "insights": { "type": "array" },
+          "visualization": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "report-generator",
+      "version": "v1",
+      "description": "根据分析结果生成结构化报告",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "sections": { "type": "array" },
+          "format": { "type": "string", "enum": ["markdown", "html", "json"], "default": "markdown" }
+        },
+        "required": ["title", "sections"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "report": { "type": "string" },
+          "format": { "type": "string" },
+          "length": { "type": "integer" }
+        }
+      }
+    },
+    {
+      "name": "context-extraction",
+      "version": "v1",
+      "description": "从用户输入和当前状态提取任务上下文",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "userInput": { "type": "string" },
+          "sessionHistory": { "type": "array" }
+        },
+        "required": ["userInput"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "context": { "type": "object" },
+          "keyFactors": { "type": "array" },
+          "ambiguities": { "type": "array" }
+        }
+      }
+    },
+    {
+      "name": "intent-classification",
+      "version": "v1",
+      "description": "分类用户意图，映射到 ALP 智能体原语",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "userInput": { "type": "string" },
+          "availableAgents": { "type": "array" }
+        },
+        "required": ["userInput"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "intent": { "type": "string" },
+          "selectedAgents": { "type": "array" },
+          "confidence": { "type": "number" }
+        }
+      }
+    },
+    {
+      "name": "plan-generator",
+      "version": "v1",
+      "description": "根据目标和上下文生成执行计划（DAG）",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "goal": { "type": "string" },
+          "context": { "type": "object" },
+          "team": { "type": "array" }
+        },
+        "required": ["goal", "team"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "dag": { "type": "array" },
+          "estimatedSteps": { "type": "integer" },
+          "parallelBranches": { "type": "integer" }
+        }
+      }
+    },
+    {
+      "name": "data-validator",
+      "version": "v1",
+      "description": "验证数据完整性、格式和业务规则",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "object" },
+          "rules": { "type": "array" },
+          "schema": { "type": "object" }
+        },
+        "required": ["data"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "valid": { "type": "boolean" },
+          "errors": { "type": "array" },
+          "warnings": { "type": "array" }
+        }
+      }
+    },
+    {
+      "name": "scheduler",
+      "version": "v1",
+      "description": "根据依赖关系和时间约束调度任务执行顺序",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tasks": { "type": "array" },
+          "dependencies": { "type": "object" },
+          "constraints": { "type": "object" }
+        },
+        "required": ["tasks"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "schedule": { "type": "array" },
+          "criticalPath": { "type": "array" },
+          "estimatedDuration": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "comparison-engine",
+      "version": "v1",
+      "description": "比较两组数据的差异并生成对比分析",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "baseline": { "type": "object" },
+          "target": { "type": "object" },
+          "compareFields": { "type": "array" }
+        },
+        "required": ["baseline", "target"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "differences": { "type": "array" },
+          "summary": { "type": "string" },
+          "changePercentage": { "type": "object" }
+        }
+      }
+    },
+    {
+      "name": "time-series-forecast",
+      "version": "v1",
+      "description": "对时序数据进行预测分析",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "historicalData": { "type": "array" },
+          "forecastPeriods": { "type": "integer", "default": 12 },
+          "confidence": { "type": "number", "default": 0.95 }
+        },
+        "required": ["historicalData"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "forecast": { "type": "array" },
+          "confidenceInterval": { "type": "object" },
+          "trendDirection": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "classifier",
+      "version": "v1",
+      "description": "对数据进行分类和分组",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "items": { "type": "array" },
+          "categories": { "type": "array" },
+          "classificationField": { "type": "string" }
+        },
+        "required": ["items"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "classified": { "type": "object" },
+          "distribution": { "type": "object" }
+        }
+      }
+    },
+    {
+      "name": "decision-maker",
+      "version": "v1",
+      "description": "基于评估矩阵选择最优方案",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "options": { "type": "array" },
+          "criteria": { "type": "array" },
+          "weights": { "type": "object" }
+        },
+        "required": ["options", "criteria"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "chosen": { "type": "object" },
+          "scores": { "type": "object" },
+          "rationale": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "resource-allocator",
+      "version": "v1",
+      "description": "优化分配计算资源、任务队列和能力配额",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tasks": { "type": "array" },
+          "resources": { "type": "object" },
+          "constraints": { "type": "object" }
+        },
+        "required": ["tasks", "resources"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "allocation": { "type": "object" },
+          "utilization": { "type": "number" },
+          "bottlenecks": { "type": "array" }
+        }
+      }
+    },
+    {
+      "name": "optimizer",
+      "version": "v1",
+      "description": "在约束条件下寻找最优解",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "objective": { "type": "string" },
+          "variables": { "type": "array" },
+          "constraints": { "type": "array" }
+        },
+        "required": ["objective", "variables"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "optimalSolution": { "type": "object" },
+          "objectiveValue": { "type": "number" }
+        }
+      }
+    },
+    {
+      "name": "input-parser",
+      "version": "v1",
+      "description": "解析用户输入，提取结构化信息",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "input": { "type": "string" },
+          "format": { "type": "string", "enum": ["text", "json", "csv", "natural"] }
+        },
+        "required": ["input"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "parsed": { "type": "object" },
+          "confidence": { "type": "number" }
+        }
+      }
+    },
+    {
+      "name": "output-formatter",
+      "version": "v1",
+      "description": "将 Agent 执行结果格式化为标准化输出",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "data": { "type": "object" },
+          "targetFormat": { "type": "string", "enum": ["json", "markdown", "html", "text"] },
+          "template": { "type": "string" }
+        },
+        "required": ["data"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "formatted": { "type": "string" },
+          "format": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "error-handler",
+      "version": "v1",
+      "description": "捕获异常并执行恢复策略",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "object" },
+          "context": { "type": "object" },
+          "retryCount": { "type": "integer", "default": 3 }
+        },
+        "required": ["error"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "resolved": { "type": "boolean" },
+          "action": { "type": "string" },
+          "fallbackResult": { "type": "object" }
+        }
+      }
+    },
+    {
+      "name": "negotiator",
+      "version": "v1",
+      "description": "在多个 Agent 之间协调达成共识",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "participants": { "type": "array" },
+          "proposals": { "type": "array" },
+          "constraints": { "type": "object" }
+        },
+        "required": ["participants"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "consensus": { "type": "object" },
+          "agreedBy": { "type": "array" },
+          "disagreements": { "type": "array" }
+        }
+      }
+    },
+    {
+      "name": "whatif-analyzer",
+      "version": "v1",
+      "description": "模拟不同场景下的可能结果",
+      "source": "nacos",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scenario": { "type": "object" },
+          "variables": { "type": "array" },
+          "assumptions": { "type": "array" }
+        },
+        "required": ["scenario"]
+      },
+      "outputs": {
+        "type": "object",
+        "properties": {
+          "outcomes": { "type": "array" },
+          "probability": { "type": "object" },
+          "recommendation": { "type": "string" }
+        }
+      }
+    }
+  ]
+}

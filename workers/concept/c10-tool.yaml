@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c10-tool
+  labels:
+    alp-layer: concept
+    alp-id: "C10"
+spec:
+  runtime: openclaw
+  displayName: "tool (C10)"
+  description: "可调用的外部工具"
+  skills:
+    - name: tool-discovery
+      source: nacos
+      ref: "aliyun/skills/tool-discovery@v1"
+    - name: tool-invocation
+      source: nacos
+      ref: "aliyun/skills/tool-invocation@v1"
+  mcpServers: []

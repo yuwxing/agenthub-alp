@@ -1,0 +1,422 @@
+[
+  {
+    "name": "allocate",
+    "description": "分配资源、任务、计算能力；多Agent协作核心动作",
+    "avatar": "../../avatar/action-allocate.png",
+    "type": "action",
+    "id": "A30"
+  },
+  {
+    "description": "分析与洞察",
+    "name": "analyze",
+    "id": "A04",
+    "avatar": "../../avatar/action-analyze.png",
+    "type": "action"
+  },
+  {
+    "description": "分组判断",
+    "name": "classify",
+    "id": "A19",
+    "avatar": "../../avatar/action-classify.png",
+    "type": "action"
+  },
+  {
+    "description": "跨智能体通信",
+    "name": "communicate",
+    "id": "A15",
+    "avatar": "../../avatar/action-communicate.png",
+    "type": "action"
+  },
+  {
+    "description": "比较与差异分析",
+    "name": "compare",
+    "id": "A07",
+    "avatar": "../../avatar/action-compare.png",
+    "type": "action"
+  },
+  {
+    "description": "创建新实体",
+    "name": "create",
+    "id": "A01",
+    "avatar": "../../avatar/action-create.png",
+    "type": "action"
+  },
+  {
+    "description": "选择方案",
+    "name": "decide",
+    "id": "A23",
+    "avatar": "../../avatar/action-decide.png",
+    "type": "action"
+  },
+  {
+    "description": "分配任务",
+    "name": "delegate",
+    "id": "A25",
+    "avatar": "../../avatar/action-delegate.png",
+    "type": "action"
+  },
+  {
+    "description": "自我改进",
+    "name": "evolve",
+    "id": "A29",
+    "avatar": "../../avatar/action-evolve.png",
+    "type": "action"
+  },
+  {
+    "description": "执行任务",
+    "name": "execute",
+    "id": "A06",
+    "avatar": "../../avatar/action-execute.png",
+    "type": "action"
+  },
+  {
+    "description": "从数据获取信息",
+    "name": "extract",
+    "id": "A17",
+    "avatar": "../../avatar/action-extract.png",
+    "type": "action"
+  },
+  {
+    "description": "生成内容",
+    "name": "generate",
+    "id": "A09",
+    "avatar": "../../avatar/action-generate.png",
+    "type": "action"
+  },
+  {
+    "description": "学习与适应",
+    "name": "learn",
+    "id": "A11",
+    "avatar": "../../avatar/action-learn.png",
+    "type": "action"
+  },
+  {
+    "description": "找关联对象",
+    "name": "match",
+    "id": "A20",
+    "avatar": "../../avatar/action-match.png",
+    "type": "action"
+  },
+  {
+    "description": "持续观察",
+    "name": "monitor",
+    "id": "A27",
+    "avatar": "../../avatar/action-monitor.png",
+    "type": "action"
+  },
+  {
+    "description": "Agent之间协调",
+    "name": "negotiate",
+    "id": "A24",
+    "avatar": "../../avatar/action-negotiate.png",
+    "type": "action"
+  },
+  {
+    "description": "寻找最佳方案",
+    "name": "optimize",
+    "id": "A22",
+    "avatar": "../../avatar/action-optimize.png",
+    "type": "action"
+  },
+  {
+    "description": "制定执行计划",
+    "name": "plan",
+    "id": "A05",
+    "avatar": "../../avatar/action-plan.png",
+    "type": "action"
+  },
+  {
+    "description": "预测未来趋势",
+    "name": "predict",
+    "id": "A08",
+    "avatar": "../../avatar/action-predict.png",
+    "type": "action"
+  },
+  {
+    "description": "读取已有数据",
+    "name": "read",
+    "id": "A02",
+    "avatar": "../../avatar/action-read.png",
+    "type": "action"
+  },
+  {
+    "description": "异常处理",
+    "name": "recover",
+    "id": "A28",
+    "avatar": "../../avatar/action-recover.png",
+    "type": "action"
+  },
+  {
+    "description": "检索已存信息",
+    "name": "retrieve",
+    "id": "A14",
+    "avatar": "../../avatar/action-retrieve.png",
+    "type": "action"
+  },
+  {
+    "description": "搜索与发现",
+    "name": "search",
+    "id": "A03",
+    "avatar": "../../avatar/action-search.png",
+    "type": "action"
+  },
+  {
+    "description": "预测场景",
+    "name": "simulate",
+    "id": "A21",
+    "avatar": "../../avatar/action-simulate.png",
+    "type": "action"
+  },
+  {
+    "description": "存储数据",
+    "name": "store",
+    "id": "A13",
+    "avatar": "../../avatar/action-store.png",
+    "type": "action"
+  },
+  {
+    "description": "更新状态",
+    "name": "sync",
+    "id": "A26",
+    "avatar": "../../avatar/action-sync.png",
+    "type": "action"
+  },
+  {
+    "description": "格式转换",
+    "name": "transform",
+    "id": "A18",
+    "avatar": "../../avatar/action-transform.png",
+    "type": "action"
+  },
+  {
+    "description": "解析输入",
+    "name": "understand",
+    "id": "A16",
+    "avatar": "../../avatar/action-understand.png",
+    "type": "action"
+  },
+  {
+    "description": "更新现有数据",
+    "name": "update",
+    "id": "A12",
+    "avatar": "../../avatar/action-update.png",
+    "type": "action"
+  },
+  {
+    "description": "验证与校验",
+    "name": "verify",
+    "id": "A10",
+    "avatar": "../../avatar/action-verify.png",
+    "type": "action"
+  },
+  {
+    "description": "智能体自身的描述与元数据",
+    "name": "agent",
+    "id": "C01",
+    "avatar": "../../avatar/concept-agent.png",
+    "type": "concept"
+  },
+  {
+    "description": "对象特征",
+    "name": "attribute",
+    "id": "C21",
+    "avatar": "../../avatar/concept-attribute.png",
+    "type": "concept"
+  },
+  {
+    "name": "capability",
+    "description": "Agent拥有的可执行能力集合；区别于SKILL（具体技能）——CAPABILITY是能力范围",
+    "avatar": "../../avatar/concept-capability.png",
+    "type": "concept",
+    "id": "C28"
+  },
+  {
+    "description": "结果可信程度",
+    "name": "confidence",
+    "id": "C27",
+    "avatar": "../../avatar/concept-confidence.png",
+    "type": "concept"
+  },
+  {
+    "description": "限制条件",
+    "name": "constraint",
+    "id": "C25",
+    "avatar": "../../avatar/concept-constraint.png",
+    "type": "concept"
+  },
+  {
+    "description": "当前环境与任务背景",
+    "name": "context",
+    "id": "C19",
+    "avatar": "../../avatar/concept-context.png",
+    "type": "concept"
+  },
+  {
+    "description": "结构化与非结构化数据",
+    "name": "data",
+    "id": "C09",
+    "avatar": "../../avatar/concept-data.png",
+    "type": "concept"
+  },
+  {
+    "description": "运行环境与上下文",
+    "name": "environment",
+    "id": "C13",
+    "avatar": "../../avatar/concept-environment.png",
+    "type": "concept"
+  },
+  {
+    "description": "发生的事件与触发",
+    "name": "event",
+    "id": "C15",
+    "avatar": "../../avatar/concept-event.png",
+    "type": "concept"
+  },
+  {
+    "description": "反馈收集与闭环",
+    "name": "feedback",
+    "id": "C18",
+    "avatar": "../../avatar/concept-feedback.png",
+    "type": "concept"
+  },
+  {
+    "description": "目标定义与达成标准",
+    "name": "goal",
+    "id": "C02",
+    "avatar": "../../avatar/concept-goal.png",
+    "type": "concept"
+  },
+  {
+    "name": "identity",
+    "description": "智能体的唯一标识与人格边界；用于多智能体系统中区分Agent",
+    "avatar": "../../avatar/concept-identity.png",
+    "type": "concept",
+    "id": "C29"
+  },
+  {
+    "description": "用户真正目的",
+    "name": "intent",
+    "id": "C20",
+    "avatar": "../../avatar/concept-intent.png",
+    "type": "concept"
+  },
+  {
+    "description": "领域知识与规则库",
+    "name": "knowledge",
+    "id": "C08",
+    "avatar": "../../avatar/concept-knowledge.png",
+    "type": "concept"
+  },
+  {
+    "description": "短期与长期记忆管理",
+    "name": "memory",
+    "id": "C07",
+    "avatar": "../../avatar/concept-memory.png",
+    "type": "concept"
+  },
+  {
+    "description": "被处理的实体",
+    "name": "object",
+    "id": "C04",
+    "avatar": "../../avatar/concept-object.png",
+    "type": "concept"
+  },
+  {
+    "name": "objective",
+    "description": "可衡量的目标结果；区别于GOAL（想达到什么）——OBJECTIVE是如何判断达到",
+    "avatar": "../../avatar/concept-objective.png",
+    "type": "concept",
+    "id": "C30"
+  },
+  {
+    "description": "达成目标的路径",
+    "name": "plan",
+    "id": "C24",
+    "avatar": "../../avatar/concept-plan.png",
+    "type": "concept"
+  },
+  {
+    "description": "决策排序",
+    "name": "priority",
+    "id": "C26",
+    "avatar": "../../avatar/concept-priority.png",
+    "type": "concept"
+  },
+  {
+    "description": "连续任务链",
+    "name": "process",
+    "id": "C23",
+    "avatar": "../../avatar/concept-process.png",
+    "type": "concept"
+  },
+  {
+    "description": "对象之间连接",
+    "name": "relation",
+    "id": "C22",
+    "avatar": "../../avatar/concept-relation.png",
+    "type": "concept"
+  },
+  {
+    "description": "可调用的能力与资产",
+    "name": "resource",
+    "id": "C11",
+    "avatar": "../../avatar/concept-resource.png",
+    "type": "concept"
+  },
+  {
+    "description": "执行结果与产出",
+    "name": "result",
+    "id": "C17",
+    "avatar": "../../avatar/concept-result.png",
+    "type": "concept"
+  },
+  {
+    "description": "业务规则与逻辑约束",
+    "name": "rule",
+    "id": "C16",
+    "avatar": "../../avatar/concept-rule.png",
+    "type": "concept"
+  },
+  {
+    "description": "智能体具备的能力",
+    "name": "skill",
+    "id": "C06",
+    "avatar": "../../avatar/concept-skill.png",
+    "type": "concept"
+  },
+  {
+    "description": "实体或系统的当前状态",
+    "name": "state",
+    "id": "C05",
+    "avatar": "../../avatar/concept-state.png",
+    "type": "concept"
+  },
+  {
+    "description": "可执行的工作单元",
+    "name": "task",
+    "id": "C03",
+    "avatar": "../../avatar/concept-task.png",
+    "type": "concept"
+  },
+  {
+    "description": "时间相关的调度与约束",
+    "name": "time",
+    "id": "C14",
+    "avatar": "../../avatar/concept-time.png",
+    "type": "concept"
+  },
+  {
+    "description": "可调用的外部工具",
+    "name": "tool",
+    "id": "C10",
+    "avatar": "../../avatar/concept-tool.png",
+    "type": "concept"
+  },
+  {
+    "description": "人类用户的画像与偏好",
+    "name": "user",
+    "id": "C12",
+    "avatar": "../../avatar/concept-user.png",
+    "type": "concept"
+  }
+]

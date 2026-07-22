@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c05-state
+  labels:
+    alp-layer: concept
+    alp-id: "C05"
+spec:
+  runtime: openclaw
+  displayName: "state (C05)"
+  description: "实体或系统的当前状态"
+  skills:
+    - name: state-tracker
+      source: nacos
+      ref: "aliyun/skills/state-tracker@v1"
+    - name: status-monitor
+      source: nacos
+      ref: "aliyun/skills/status-monitor@v1"
+  mcpServers: []

@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c29-identity
+  labels:
+    alp-layer: concept
+    alp-id: "C29"
+spec:
+  runtime: openclaw
+  displayName: "Identity (C29)"
+  description: "智能体的唯一标识与人格边界"
+  skills:
+    - name: "identity-manager"
+      source: nacos
+      ref: "aliyun/skills/identity-manager@v1"
+    - name: "profile-resolver"
+      source: nacos
+      ref: "aliyun/skills/profile-resolver@v1"
+  mcpServers: []

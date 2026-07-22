@@ -1,0 +1,7 @@
+{
+  "name": "capability",
+  "description": "Agent拥有的可执行能力集合；区别于SKILL（具体技能）——CAPABILITY是能力范围",
+  "avatar": "../../avatar/concept-capability.png",
+  "type": "concept",
+  "id": "C28"
+}

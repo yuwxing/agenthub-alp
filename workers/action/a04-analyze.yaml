@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a04-analyze
+  labels:
+    alp-layer: action
+    alp-id: "A04"
+spec:
+  runtime: openclaw
+  displayName: "analyze (A04)"
+  description: "分析与洞察"
+  skills:
+    - name: statistical-analysis
+      source: nacos
+      ref: "aliyun/skills/statistical-analysis@v1"
+    - name: trend-detection
+      source: nacos
+      ref: "aliyun/skills/trend-detection@v1"
+  mcpServers: []

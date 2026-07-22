@@ -1,0 +1,7 @@
+{
+  "description": "实体或系统的当前状态",
+  "name": "state",
+  "id": "C05",
+  "avatar": "../../avatar/concept-state.png",
+  "type": "concept"
+}

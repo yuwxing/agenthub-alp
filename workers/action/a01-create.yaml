@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a01-create
+  labels:
+    alp-layer: action
+    alp-id: "A01"
+spec:
+  runtime: openclaw
+  displayName: "create (A01)"
+  description: "创建新实体"
+  skills:
+    - name: resource-creator
+      source: nacos
+      ref: "aliyun/skills/resource-creator@v1"
+    - name: entity-factory
+      source: nacos
+      ref: "aliyun/skills/entity-factory@v1"
+  mcpServers: []

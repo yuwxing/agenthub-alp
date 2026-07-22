@@ -1,0 +1,16 @@
+(kicad_pcb (version 20240126) (generator "manual")
+  (paper "A4")
+  (layers
+    (0 "F.Cu" signal)
+    (31 "B.Cu" signal)
+    (35 "Edge.Cuts" user)
+  )
+  (setup
+    (pad_to_mask_clearance 0.05)
+    (tracks_clearance 0.2)
+  )
+  (gr_line (start 0 0) (end 92.2 0) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 92.2 0) (end 92.2 73.15) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 92.2 73.15) (end 0 73.15) (layer Edge.Cuts) (width 0.15))
+  (gr_line (start 0 73.15) (end 0 0) (layer Edge.Cuts) (width 0.15))
+)

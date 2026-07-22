@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgentHub ALP 智能体语言键盘 V1.0</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg-deep: #0a0e1a;
+  --bg-panel: #0d1224;
+  --bg-card: #111830;
+  --bg-key: #161e36;
+  --bg-key-hover: #1e2a4a;
+  --border: #1e2d50;
+  --border-glow: #2a4080;
+  --text: #c8d4f0;
+  --text-dim: #5a6b8e;
+  --text-bright: #e8efff;
+  --blue: #3b82f6;
+  --blue-soft: rgba(59,130,246,.15);
+  --cyan: #06b6d4;
+  --green: #22c55e;
+  --green-soft: rgba(34,197,94,.15);
+  --amber: #f59e0b;
+  --amber-soft: rgba(245,158,11,.12);
+  --purple: #8b5cf6;
+  --red: #ef4444;
+  --pink: #ec4899;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 4px 24px rgba(0,0,0,.5);
+}
+html, body { height: 100%; background: var(--bg-deep); color: var(--text); font-family: -apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif; overflow: hidden; user-select: none; }
+
+/* ===== TOP BAR ===== */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 48px; padding: 0 16px;
+  background: linear-gradient(180deg,#141c33,#0d1224);
+  border-bottom: 1px solid var(--border); z-index: 100;
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+  width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--blue),var(--cyan));
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;
+}
+.logo-text { font-size: 14px; font-weight: 700; color: var(--text-bright); letter-spacing: .5px; }
+.logo-ver { font-size: 11px; color: var(--text-dim); margin-left: 4px; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.tb-btn {
+  display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--radius-sm);
+  background:transparent;color:var(--text-dim);font-size:12px;cursor:pointer;border:1px solid transparent;
+  transition:.2s;
+}
+.tb-btn:hover { color: var(--text); background: var(--bg-card); border-color: var(--border); }
+.user-avatar {
+  width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;cursor:pointer;
+}
+
+/* ===== MAIN LAYOUT ===== */
+.main {
+  display: grid; grid-template-columns: 300px 1fr 280px; gap: 0; height: calc(100vh - 48px - 32px);
+}
+.panel { padding: 12px; overflow-y: auto; border-right: 1px solid var(--border); }
+.panel:last-child { border-right: none; border-left: 1px solid var(--border); }
+
+/* ===== LEFT PANEL ===== */
+.left-panel { background: var(--bg-panel); display: flex; flex-direction: column; gap: 12px; }
+.section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--cyan); margin-bottom: 6px; }
+
+.input-examples { 
+  background: var(--bg-card); border-radius: var(--radius); padding: 12px; border: 1px solid var(--border);
+}
+.example-item {
+  font-size: 12px; color: var(--text-dim); padding: 6px 0; border-bottom: 1px dashed var(--border);
+  cursor: pointer; transition: .2s; line-height: 1.5;
+}
+.example-item:last-child { border-bottom: none; }
+.example-item:hover { color: var(--cyan); }
+
+.ai-command-core {
+  background: var(--bg-card); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border-glow);
+  text-align: center; position: relative; overflow: hidden;
+}
+.acc-label { font-size: 11px; color: var(--cyan); letter-spacing: 2px; margin-bottom: 16px; font-weight: 600; }
+.mic-wrapper { position: relative; display: inline-block; margin: 10px 0 16px; }
+.mic-btn {
+  width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#1a2a55,#0f1a38);
+  border:2px solid var(--border-glow);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.3s;position:relative;z-index:2;
+}
+.mic-btn:hover { box-shadow: 0 0 30px rgba(59,130,246,.4); transform: scale(1.05); }
+.mic-btn.active { animation: pulse-mic 1.5s infinite; border-color: var(--cyan); }
+@keyframes pulse-mic {
+  0%,100%{box-shadow:0 0 10px rgba(6,182,212,.3)}
+  50%{box-shadow:0 0 35px rgba(6,182,212,.6)}
+}
+.mic-icon { font-size: 28px; }
+.waveform {
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:200px;height:60px;display:flex;align-items:center;justify-content:center;gap:3px;z-index:1;opacity:0;transition:.3s;
+}
+.waveform.active { opacity: 1; }
+.wave-bar {
+  width:3px;height:20px;background:var(--cyan);border-radius:2px;animation:wave .8s ease-in-out infinite;
+}
+.wave-bar:nth-child(odd) { animation-delay: .1s; background: var(--blue); }
+.wave-bar:nth-child(3n) { animation-delay: .25s; height: 35px; }
+@keyframes wave { 0%,100%{transform:scaleY(.4)} 50%{transform:scaleY(1)} }
+.input-placeholder { font-size: 13px; color: var(--text-dim); margin-top: 8px; }
+.text-input-row { display: flex; gap: 4px; margin-top: 6px; }
+.text-input {
+  flex: 1; padding: 6px 8px; border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  background: var(--bg-key); border: 1px solid var(--border); color: var(--text);
+  font-size: 12px; outline: none; transition: .2s;
+}
+.text-input:focus { border-color: var(--cyan); box-shadow: 0 0 8px rgba(6,182,212,.2); }
+.text-input-btn {
+  padding: 6px 10px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--blue); border: 1px solid var(--blue); color: #fff; cursor: pointer;
+  font-size: 13px; transition: .2s;
+}
+.text-input-btn:hover { background: var(--cyan); border-color: var(--cyan); }
+.exec-output {
+  margin-top: 8px; padding: 8px; border-radius: var(--radius-sm);
+  background: rgba(6,182,212,.06); border: 1px solid var(--border);
+  font-size: 11px; color: var(--text); text-align: left; max-height: 200px; overflow-y: auto;
+  line-height: 1.6; white-space: pre-wrap;
+}
+.exec-output .out-title { font-size: 10px; color: var(--cyan); font-weight: 600; margin-bottom: 4px; }
+.exec-output .out-section { margin: 4px 0; padding: 4px 6px; background: rgba(59,130,246,.06); border-radius: 4px; }
+.exec-output .out-label { color: var(--text-dim); font-size: 9px; }
+.exec-output .out-agent { color: var(--blue); font-weight: 600; }
+
+.layer-nav {
+  display: flex; gap: 4px; margin-top: auto;
+}
+.layer-tab {
+  flex:1;padding:8px 4px;text-align:center;border-radius:var(--radius-sm);font-size:11px;
+  cursor:pointer;border:1px solid var(--border);color:var(--text-dim);transition:.2s;background:transparent;
+}
+.layer-tab.active { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
+.layer-tab.green.active { background: var(--green-soft); color: var(--green); border-color: var(--green); }
+.layer-tab.amber.active { background: var(--amber-soft); color: var(--amber); border-color: var(--amber); }
+
+/* ===== CENTER - KEYBOARD ===== */
+.center-panel { background: var(--bg-panel); display: flex; flex-direction: column; padding: 8px 12px 4px; gap: 6px; overflow-y: auto; min-height: 0; }
+.kbd-mode-bar { display: flex; gap: 4px; margin-bottom: 2px; }
+.kbd-mode-btn {
+  flex:1;padding:4px;text-align:center;border-radius:var(--radius-sm);font-size:10px;
+  cursor:pointer;border:1px solid var(--border);color:var(--text-dim);
+  transition:.2s;background:transparent;
+}
+.kbd-mode-btn.active { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); font-weight:600; }
+.kbd-row { display: flex; justify-content: center; gap: 4px; margin-bottom: 4px; }
+
+.key {
+  min-width:42px;height:44px;border-radius:8px;background:var(--bg-key);
+  border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;transition:.15s;position:relative;font-size:10px;color:var(--text-dim);flex:1;
+}
+.key:hover { background: var(--bg-key-hover); border-color: var(--border-glow); transform: translateY(-1px); }
+.key:active { transform: translateY(1px); }
+.key.pressed { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 12px rgba(59,130,246,.5); }
+.key.concept.activated { border-color: var(--blue) !important; background: rgba(59,130,246,.15) !important; }
+.key.action.activated { border-color: var(--green) !important; background: rgba(34,197,94,.15) !important; }
+
+/* Key types */
+.key.concept { border-color: #1e3a6e; }
+.key.concept:hover { border-color: var(--blue); background: rgba(59,130,246,.12); }
+.key.action { border-color: #1a4a2e; }
+.key.action:hover { border-color: var(--green); background: rgba(34,197,94,.12); }
+.key.system { border-color: #4a3a1a; }
+.key.system:hover { border-color: var(--amber); background: rgba(245,158,11,.12); }
+
+.key-letter { font-size: 13px; font-weight: 700; color: var(--text-bright); line-height: 1; }
+.key-cn { font-size: 9px; color: var(--text-dim); line-height: 1.2; margin-top: 1px; }
+.key-fn { font-size: 8px; color: var(--cyan); line-height: 1; margin-top: 1px; opacity: .7; }
+
+/* Special keys */
+.key-wide { min-width: 64px; flex: 1.5 !important; }
+.key-wider { min-width: 80px; flex: 2 !important; }
+.key-extra { min-width: 56px; flex: 1.3 !important; }
+.key-space { min-width: 220px !important; flex: 6 !important; }
+.key-exec {
+  min-width:200px!important;height:52px!important;flex:5!important;
+  background:linear-gradient(135deg,#1a1560,#0d1a38)!important;
+  border:2px solid var(--purple)!important;border-radius:12px!important;
+  flex-direction:row!important;gap:8px!important;
+}
+.key-exec:hover { box-shadow: 0 0 25px rgba(139,92,246,.4)!important; }
+.exec-text { font-size: 12px; font-weight: 700; color: var(--purple); letter-spacing: 1px; }
+.exec-sub { font-size: 9px; color: var(--text-dim); }
+
+/* Key badge (C01/A01 etc) */
+.key-badge {
+  position:absolute;top:-6px;left:4px;font-size:7px;padding:0 3px;border-radius:3px;
+  background:rgba(59,130,246,.2);color:var(--blue);font-weight:600;line-height:1.3;
+}
+.key.action .key-badge { background: rgba(34,197,94,.2); color: var(--green); }
+.key.system .key-badge { background: rgba(245,158,11,.2); color: var(--amber); }
+
+/* ===== RIGHT PANEL ===== */
+.right-panel { background: var(--bg-panel); display: flex; flex-direction: column; gap: 10px; }
+
+.status-card {
+  background: var(--bg-card); border-radius: var(--radius); padding: 10px 12px; border: 1px solid var(--border);
+}
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.card-title { font-size: 11px; font-weight: 600; color: var(--text-bright); }
+.recognized-count { font-size: 11px; color: var(--cyan); font-weight: 700; }
+
+.agent-icons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.agent-icon {
+  width:36px;height:36px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:9px;color:var(--text-dim);cursor:pointer;border:1px solid var(--border);transition:.2s;
+  background: var(--bg-key);
+}
+.agent-icon:hover { border-color: var(--border-glow); color: var(--text); }
+.agent-icon .ai-emoji { font-size: 16px; margin-bottom: 1px; }
+.agent-icon.lit { border-color: var(--cyan); background: rgba(6,182,212,.1); color: var(--cyan); box-shadow: 0 0 10px rgba(6,182,212,.2); }
+
+.status-list { font-size: 11px; }
+.status-row { display: flex; align-items: center; justify-content: space-between; padding: 3px 0; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+.dot.blue { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+.dot.cyan { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+.dot.amber { background: var(--amber); }
+.dot.gray { background: #444; }
+
+.pipeline { display: flex; flex-direction: column; gap: 4px; }
+.pipe-step {
+  display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:var(--radius-sm);
+  font-size:11px;color:var(--text-dim);transition:.2s;background:transparent;
+}
+.pipe-step.done { color: var(--green); }
+.pipe-step.active { color: var(--cyan); background: rgba(6,182,212,.08); }
+.pipe-num {
+  width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;background:var(--bg-key);border:1px solid var(--border);flex-shrink:0;
+}
+.pipe-step.done .pipe-num { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+.pipe-step.active .pipe-num { background: var(--blue-soft); border-color: var(--blue); color: var(--blue); animation: glow-pulse 1.5s infinite; }
+@keyframes glow-pulse { 0%,100%{box-shadow:0 0 4px rgba(59,130,246,.3)} 50%{box-shadow:0 0 12px rgba(59,130,246,.6)} }
+.pipe-name { flex: 1; }
+.pipe-status { font-size: 10px; }
+
+.sys-info { display: flex; flex-direction: column; gap: 6px; }
+.sys-row { display: flex; align-items: center; justify-content: space-between; font-size: 11px; }
+.sys-label { color: var(--text-dim); }
+.sys-val { font-weight: 600; color: var(--text-bright); }
+.progress-bar { height: 4px; background: var(--bg-key); border-radius: 2px; overflow: hidden; margin-top: 2px; }
+.progress-fill { height: 100%; border-radius: 2px; transition: width .5s; }
+.progress-fill.blue { background: linear-gradient(90deg, var(--blue), var(--cyan)); }
+.progress-fill.green { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+.progress-fill.amber { background: linear-gradient(90deg, var(--amber), var(--red)); }
+
+/* ===== BOTTOM BAR ===== */
+.bottombar {
+  height: 32px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
+  background: var(--bg-panel); border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim);
+}
+.bottombar-left { display: flex; align-items: center; gap: 12px; }
+.bottombar-right { display: flex; align-items: center; gap: 16px; }
+.layer-dot { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.ldot { width: 8px; height: 8px; border-radius: 50%; }
+.ldot.c { background: var(--blue); } ldot.a { background: var(--green); } ldot.s { background: var(--amber); }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-glow); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+.animate-in { animation: fadeInUp .3s ease-out both; }
+
+/* ===== CENTER OUTPUT ===== */
+.center-output {
+  border-top: 1px solid var(--border); padding: 10px 12px; overflow-y: auto;
+  background: var(--bg-panel); flex-shrink: 0; max-height: 300px;
+}
+.center-output-scroll {
+  font-size: 12px; line-height: 1.7; color: var(--text);
+}
+.center-output-scroll .co-title {
+  font-size: 13px; font-weight: 700; color: var(--cyan); margin-bottom: 6px;
+}
+.center-output-scroll .co-block {
+  margin: 6px 0; padding: 8px; border-radius: var(--radius-sm);
+  background: var(--bg-card); border: 1px solid var(--border);
+}
+.center-output-scroll .co-block-title {
+  font-size: 11px; font-weight: 600; color: var(--text-bright); margin-bottom: 4px;
+}
+.center-output-scroll .co-line { color: var(--text-dim); font-size: 11px; white-space: pre-wrap; user-select: text; }
+.center-output-scroll .co-sep { border: none; border-top: 1px dashed var(--border); margin: 8px 0; }
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .main { grid-template-columns: 240px 1fr 240px; }
+  .key { min-width: 36px; height: 38px; font-size: 9px; }
+  .key-letter { font-size: 11px; }
+  .key-space { min-width: 160px !important; }
+  .key-exec { min-width: 150px !important; }
+}
+@media (max-width: 900px) {
+  .main { grid-template-columns: 1fr; overflow-y: auto; }
+  .panel { border-right: none !important; border-bottom: 1px solid var(--border); }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo-icon">A</div>
+    <span class="logo-text">AgentHub ALP 智能体语言键盘</span>
+    <span class="logo-ver">V1.0</span>
+  </div>
+  <div class="topbar-right">
+    <button class="tb-btn" onclick="showLayout()">⌨ 键盘布局</button>
+    <button class="tb-btn" onclick="showTheme()">🎨 主题</button>
+    <button class="tb-btn" onclick="showSettings()">⚙ 设置</button>
+    <button class="tb-btn" onclick="showHelp()">❓ 帮助</button>
+    <div class="user-avatar">M</div>
+  </div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- LEFT PANEL -->
+  <div class="panel left-panel">
+    <!-- Input Examples -->
+    <div class="input-examples animate-in">
+      <div class="section-title">自然语言输入示例</div>
+      <div class="example-item" onclick="useExample(this)">"帮我分析广东中考英语趋势并生成课件"</div>
+      <div class="example-item" onclick="useExample(this)">"比较两个方案的优缺点并给出建议"</div>
+      <div class="example-item" onclick="useExample(this)">"预测下个月的销售趋势并生成报告"</div>
+    </div>
+
+    <!-- AI Command Core -->
+    <div class="ai-command-core animate-in" style="animation-delay:.1s">
+      <div class="acc-label">AI COMMAND CORE</div>
+      <div class="mic-wrapper">
+        <div class="waveform" id="waveform">
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+        </div>
+        <div class="mic-btn" id="micBtn" onclick="toggleMic()">
+          <span class="mic-icon">🎤</span>
+        </div>
+      </div>
+      <div class="input-placeholder" id="inputPlaceholder">请说出或输入你的需求...</div>
+      <div class="text-input-row">
+        <input type="text" id="textInput" class="text-input" placeholder="输入任意需求，回车触发..." />
+        <button class="text-input-btn" onclick="submitText()">▶</button>
+      </div>
+      <div class="exec-output" id="execOutput" style="display:none"></div>
+    </div>
+
+    <!-- Layer Nav -->
+    <div class="layer-nav animate-in" style="animation-delay:.2s">
+      <div class="layer-tab active" onclick="switchLayer('concept',this)">
+        🧠<br/>概念层<br/><small>(C01~C30)</small><br/>描述世界
+      </div>
+      <div class="layer-tab green" onclick="switchLayer('action',this)">
+        ▶️<br/>动作层<br/><small>(A01~A30)</small><br/>执行行为
+      </div>
+      <div class="layer-tab amber" onclick="switchLayer('system',this)">
+        ⚙️<br/>系统层<br/>(实键功能)<br/>运行支撑
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER - KEYBOARD -->
+  <div class="panel center-panel" id="keyboardArea">
+    <!-- Keyboard Mode Toggle -->
+    <div class="kbd-mode-bar">
+      <div class="kbd-mode-btn active" id="modeAgent" onclick="switchKbdMode('agent')">🤖 智能体键盘</div>
+      <div class="kbd-mode-btn" id="modeType" onclick="switchKbdMode('type')">⌨ 输入键盘</div>
+    </div>
+    <!-- Row 0: Escape + C01-C07 -->
+    <div class="kbd-row">
+      <div class="key key-wide concept" data-key="Escape"><span class="key-letter">Esc</span><span class="key-cn">退出</span></div>
+      <div class="key concept" data-key="C01" data-badge="C01"><span class="key-badge">C01</span><span class="key-letter">Agent</span><span class="key-cn">智能体</span></div>
+      <div class="key concept" data-key="C02" data-badge="C02"><span class="key-badge">C02</span><span class="key-letter">Identity</span><span class="key-cn">身份</span></div>
+      <div class="key concept" data-key="C03" data-badge="C03"><span class="key-badge">C03</span><span class="key-letter">User</span><span class="key-cn">用户</span></div>
+      <div class="key concept" data-key="C04" data-badge="C04"><span class="key-badge">C04</span><span class="key-letter">Goal</span><span class="key-cn">目标</span></div>
+      <div class="key concept" data-key="C05" data-badge="C05"><span class="key-badge">C05</span><span class="key-letter">Objective</span><span class="key-cn">目标</span></div>
+      <div class="key concept" data-key="C06" data-badge="C06"><span class="key-badge">C06</span><span class="key-letter">Task</span><span class="key-cn">任务</span></div>
+      <div class="key concept" data-key="C07" data-badge="C07"><span class="key-badge">C07</span><span class="key-letter">Object</span><span class="key-cn">对象</span></div>
+      <div class="key concept" data-key="C08" data-badge="C08"><span class="key-badge">C08</span><span class="key-letter">State</span><span class="key-cn">状态</span></div>
+      <div class="key concept" data-key="C09" data-badge="C09"><span class="key-badge">C09</span><span class="key-letter">Attribute</span><span class="key-cn">属性</span></div>
+      <div class="key concept" data-key="C10" data-badge="C10"><span class="key-badge">C10</span><span class="key-letter">Context</span><span class="key-cn">上下文</span></div>
+      <div class="key concept" data-key="C11" data-badge="C11"><span class="key-badge">C11</span><span class="key-letter">Intent</span><span class="key-cn">意图</span></div>
+      <div class="key concept" data-key="C12" data-badge="C12"><span class="key-badge">C12</span><span class="key-letter">Relation</span><span class="key-cn">关系</span></div>
+      <div class="key key-wide concept" data-key="Backspace"><span class="key-letter">⌫</span><span class="key-cn">Backspace</span></div>
+    </div>
+
+    <!-- Row 1: Tab + Q-P -->
+    <div class="kbd-row">
+      <div class="key key-wide concept" data-key="Tab"><span class="key-letter">Tab</span></div>
+      <div class="key concept" data-key="q"><span class="key-letter">Q</span><span class="key-cn">Event<br/>事件</span></div>
+      <div class="key concept" data-key="w"><span class="key-letter">W</span><span class="key-cn">Process<br/>流程</span></div>
+      <div class="key concept" data-key="e"><span class="key-letter">E</span><span class="key-cn">Plan<br/>计划</span></div>
+      <div class="key concept" data-key="r"><span class="key-letter">R</span><span class="key-cn">Rule<br/>规则</span></div>
+      <div class="key concept" data-key="t"><span class="key-letter">T</span><span class="key-cn">Constraint<br/>约束</span></div>
+      <div class="key concept" data-key="y"><span class="key-letter">Y</span><span class="key-cn">Priority<br/>优先级</span></div>
+      <div class="key concept" data-key="u"><span class="key-letter">U</span><span class="key-cn">Confidence<br/>置信度</span></div>
+      <div class="key concept" data-key="i"><span class="key-letter">I</span><span class="key-cn">Skill<br/>技能</span></div>
+      <div class="key concept" data-key="o"><span class="key-letter">O</span><span class="key-cn">Capability<br/>能力</span></div>
+      <div class="key concept" data-key="p"><span class="key-letter">P</span><span class="key-cn">Memory<br/>记忆</span></div>
+      <div class="key key-wide concept" data-key="[" ><span class="key-letter">[</span><span class="key-cn">Knowledge<br/>知识</span></div>
+      <div class="key key-wide concept" data-key="]"><span class="key-letter">]</span><span class="key-cn">Data<br/>数据</span></div>
+      <div class="key key-wide concept" data-key="\"><span class="key-letter">\</span><span class="key-cn">Tool<br/>工具</span></div>
+    </div>
+
+    <!-- Row 2: CapsLock + A-L -->
+    <div class="kbd-row">
+      <div class="key key-wider concept" data-key="CapsLock"><span class="key-letter">Caps Lock</span></div>
+      <div class="key action" data-key="A26" data-badge="A26"><span class="key-badge">A26</span><span class="key-letter">A</span><span class="key-cn">Resource<br/>资源</span></div>
+      <div class="key action" data-key="A27" data-badge="A27"><span class="key-badge">A27</span><span class="key-letter">S</span><span class="key-cn">Environment<br/>环境</span></div>
+      <div class="key action" data-key="A28" data-badge="A28"><span class="key-badge">A28</span><span class="key-letter">D</span><span class="key-cn">Time<br/>时间</span></div>
+      <div class="key action" data-key="A29" data-badge="A29"><span class="key-badge">A29</span><span class="key-letter">F</span><span class="key-cn">Result<br/>结果</span></div>
+      <div class="key action" data-key="A30" data-badge="A30"><span class="key-badge">A30</span><span class="key-letter">G</span><span class="key-cn">Feedback<br/>反馈</span></div>
+      <div class="key action" data-key="A01" data-badge="A01"><span class="key-badge">A01</span><span class="key-letter">H</span><span class="key-cn">Create<br/>创建</span></div>
+      <div class="key action" data-key="A02" data-badge="A02"><span class="key-badge">A02</span><span class="key-letter">J</span><span class="key-cn">Field<br/>领域</span></div>
+      <div class="key action" data-key="A03" data-badge="A03"><span class="key-badge">A03</span><span class="key-letter">K</span><span class="key-cn">Search<br/>搜索</span></div>
+      <div class="key action" data-key="A04" data-badge="A04"><span class="key-badge">A04</span><span class="key-letter">L</span><span class="key-cn">Analyze<br/>分析</span></div>
+      <div class="key key-wider action" data-key="Enter"><span class="key-letter">Enter</span></div>
+    </div>
+
+    <!-- Row 3: Shift + A-action row -->
+    <div class="kbd-row">
+      <div class="key key-wider concept" data-key="Shift"><span class="key-letter">Shift</span></div>
+      <div class="key action" data-key="A05" data-badge="A05"><span class="key-badge">A05</span><span class="key-letter">Z</span><span class="key-cn">Execute<br/>执行</span></div>
+      <div class="key action" data-key="A06" data-badge="A06"><span class="key-badge">A06</span><span class="key-letter">X</span><span class="key-cn">Compare<br/>比较</span></div>
+      <div class="key action" data-key="A07" data-badge="A07"><span class="key-badge">A07</span><span class="key-letter">C</span><span class="key-cn">Predict<br/>预测</span></div>
+      <div class="key action" data-key="A08" data-badge="A08"><span class="key-badge">A08</span><span class="key-letter">V</span><span class="key-cn">Verify<br/>验证</span></div>
+      <div class="key action" data-key="A09" data-badge="A09"><span class="key-badge">A09</span><span class="key-letter">B</span><span class="key-cn">Learn<br/>学习</span></div>
+      <div class="key action" data-key="A10" data-badge="A10"><span class="key-badge">A10</span><span class="key-letter">N</span><span class="key-cn">Update<br/>更新</span></div>
+      <div class="key action" data-key="A11" data-badge="A11"><span class="key-badge">A11</span><span class="key-letter">M</span><span class="key-cn">Store<br/>存储</span></div>
+      <div class="key action" data-key="A12" data-badge="A12"><span class="key-badge">A12</span><span class="key-letter">,</span><span class="key-cn">Retrieve<br/>检索</span></div>
+      <div class="key action" data-key="A13" data-badge="A13"><span class="key-badge">A13</span><span class="key-letter">.</span><span class="key-cn">Communicate<br/>沟通</span></div>
+      <div class="key action" data-key="A14" data-badge="A14"><span class="key-badge">A14</span><span class="key-letter">/</span><span class="key-cn">Understand<br/>理解</span></div>
+      <div class="key key-wider concept" data-key="Shift-R"><span class="key-letter">Shift</span></div>
+    </div>
+
+    <!-- Row 4: Ctrl + more actions -->
+    <div class="kbd-row">
+      <div class="key key-wider concept" data-key="Ctrl"><span class="key-letter">Ctrl</span></div>
+      <div class="key action" data-key="A15" data-badge="A15"><span class="key-badge">A15</span><span class="key-letter">;</span><span class="key-cn">Extract<br/>提取</span></div>
+      <div class="key action" data-key="A16" data-badge="A16"><span class="key-badge">A16</span><span class="key-letter">'</span><span class="key-cn">Transform<br/>转换</span></div>
+      <div class="key action" data-key="A17" data-badge="A17"><span class="key-badge">A17</span><span class="key-letter">Y</span><span class="key-cn">Classify<br/>分类</span></div>
+      <div class="key action" data-key="A18" data-badge="A18"><span class="key-badge">A18</span><span class="key-letter">[</span><span class="key-cn">Match<br/>匹配</span></div>
+      <div class="key action" data-key="A19" data-badge="A19"><span class="key-badge">A19</span><span class="key-letter">]</span><span class="key-cn">Simulate<br/>模拟</span></div>
+      <div class="key action" data-key="A20" data-badge="A20"><span class="key-badge">A20</span><span class="key-letter">\</span><span class="key-cn">Simulate<br/>优化</span></div>
+      <div class="key action" data-key="A21" data-badge="A21"><span class="key-badge">A21</span><span class="key-letter">-</span><span class="key-cn">Decide<br/>决策</span></div>
+      <div class="key action" data-key="A22" data-badge="A22"><span class="key-badge">A22</span><span class="key-letter">=</span><span class="key-cn">Negotiate<br/>协商</span></div>
+      <div class="key action" data-key="A23" data-badge="A23"><span class="key-badge">A23</span><span class="key-letter">P</span><span class="key-cn">Delegate<br/>分派</span></div>
+      <div class="key action" data-key="A24" data-badge="A24"><span class="key-badge">A24</span><span class="key-letter">G</span><span class="key-cn">Sync<br/>同步</span></div>
+      <div class="key action" data-key="A25" data-badge="A25"><span class="key-badge">A25</span><span class="key-letter">;</span><span class="key-cn">Spintor<br/>监控</span></div>
+      <div class="key key-wider concept" data-key="Alt"><span class="key-letter">Alt</span></div>
+    </div>
+
+    <!-- Row 5: Fn + system keys -->
+    <div class="kbd-row">
+      <div class="key key-wider concept" data-key="Fn"><span class="key-letter">Fn</span></div>
+      <div class="key action" data-key="A26" data-badge="A26"><span class="key-badge">A26</span><span class="key-letter">A</span><span class="key-cn">Monitor<br/>监视</span></div>
+      <div class="key action" data-key="A27" data-badge="A27"><span class="key-badge">A27</span><span class="key-letter">S</span><span class="key-cn">Recover<br/>恢复</span></div>
+      <div class="key action" data-key="A28" data-badge="A28"><span class="key-badge">A28</span><span class="key-letter">D</span><span class="key-cn">Evolve<br/>进化</span></div>
+      <div class="key action" data-key="A29" data-badge="A29"><span class="key-badge">A29</span><span class="key-letter">F</span><span class="key-cn">Allocate<br/>分配</span></div>
+      <div class="key action" data-key="A30" data-badge="A30"><span class="key-badge">A30</span><span class="key-letter">G</span><span class="key-cn">PlanAction<br/>规划行动</span></div>
+      <div class="key action" data-badge="A31"><span class="key-badge">A31</span><span class="key-letter">H</span><span class="key-cn">Evaluate<br/>评估</span></div>
+      <div class="key system" data-badge="S1"><span class="key-badge">S1</span><span class="key-letter">🔄</span><span class="key-cn">概念层<br/>切换</span></div>
+      <div class="key system" data-badge="S2"><span class="key-badge">S2</span><span class="key-letter">▶️</span><span class="key-cn">动作层<br/>切换</span></div>
+      <div class="key system" data-badge="S3"><span class="key-badge">S3</span><span class="key-letter">📋</span><span class="key-cn">流程图组<br/>工作流</span></div>
+      <div class="key system" data-badge="S4"><span class="key-badge">S4</span><span class="key-letter">🤖</span><span class="key-cn">智能体<br/>市场</span></div>
+      <div class="key key-wider concept" data-key="Ctrl-R"><span class="key-letter">Ctrl</span></div>
+    </div>
+
+    <!-- Row 6: Space bar area with EXECUTE -->
+    <div class="kbd-row">
+      <div class="key key-extra system" data-badge="S5"><span class="key-badge">S5</span><span class="key-letter">🗑️</span><span class="key-cn">清空重置<br/>清除</span></div>
+      <div class="key key-exec" onclick="executeWorkflow()">
+        <span>🤖</span>
+        <div style="text-align:left">
+          <div class="exec-text">AGENT EXECUTE</div>
+          <div class="exec-sub">执行整个工作流 ▶</div>
+        </div>
+      </div>
+      <div class="key system" data-badge="S6"><span class="key-badge">S6</span><span class="key-letter">↩️</span><span class="key-cn">撤销上一步<br/>撤销</span></div>
+      <div class="key system" data-badge="S7"><span class="key-badge">S7</span><span class="key-letter">💾</span><span class="key-cn">保存配置<br/>保存</span></div>
+      <div class="key system" data-badge="S8"><span class="key-badge">S8</span><span class="key-letter">📤</span><span class="key-cn">导出结果<br/>导出</span></div>
+      <div class="key key-extra concept" data-key="Ctrl-E"><span class="key-letter">Ctrl</span></div>
+    </div>
+
+    <!-- Center Output Area -->
+    <div class="center-output" id="centerOutput" style="display:none">
+      <div class="center-output-scroll" id="centerOutputContent"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel right-panel">
+    <!-- AI Parse Result -->
+    <div class="status-card animate-in">
+      <div class="card-header">
+        <span class="card-title">AI 解析结果（将点亮相关智能体）</span>
+        <span class="recognized-count" id="agentCount">已识别 12 个相关智能体</span>
+      </div>
+      <div class="agent-icons" id="agentIcons">
+        <div class="agent-icon" data-agent-id="C01"><span class="ai-emoji">🧠</span>智能体</div>
+        <div class="agent-icon" data-agent-id="C02"><span class="ai-emoji">🎯</span>目标</div>
+        <div class="agent-icon" data-agent-id="C03"><span class="ai-emoji">📋</span>任务</div>
+        <div class="agent-icon" data-agent-id="C24"><span class="ai-emoji">🗺️</span>计划</div>
+        <div class="agent-icon" data-agent-id="C19"><span class="ai-emoji">🔍</span>上下文</div>
+        <div class="agent-icon" data-agent-id="C20"><span class="ai-emoji">💡</span>意图</div>
+        <div class="agent-icon" data-agent-id="A04"><span class="ai-emoji">📊</span>分析</div>
+        <div class="agent-icon" data-agent-id="A06"><span class="ai-emoji">⚡</span>执行</div>
+        <div class="agent-icon" data-agent-id="A03"><span class="ai-emoji">🔎</span>搜索</div>
+        <div class="agent-icon" data-agent-id="A09"><span class="ai-emoji">✏️</span>生成</div>
+        <div class="agent-icon" data-agent-id="A10"><span class="ai-emoji">✅</span>验证</div>
+        <div class="agent-icon" data-agent-id="A08"><span class="ai-emoji">📈</span>预测</div>
+      </div>
+    </div>
+
+    <!-- Agent Status -->
+    <div class="status-card animate-in" style="animation-delay:.05s">
+      <div class="card-header"><span class="card-title">智能体状态</span></div>
+      <div class="status-list">
+        <div class="status-row"><span><span class="dot blue"></span>已激活</span><span>(12)</span></div>
+        <div class="status-row"><span><span class="dot cyan"></span>待激活</span><span>(20)</span></div>
+        <div class="status-row"><span><span class="dot amber"></span>可用</span><span>(28)</span></div>
+        <div class="status-row"><span><span class="dot gray"></span>未使用</span><span>(0)</span></div>
+      </div>
+    </div>
+
+    <!-- Execution Pipeline -->
+    <div class="status-card animate-in" style="animation-delay:.1s">
+      <div class="card-header"><span class="card-title">执行流程</span></div>
+      <div class="pipeline" id="pipeline">
+        <div class="pipe-step done"><div class="pipe-num">1</div><span class="pipe-name">Understand</span><span class="pipe-status">理解 ✓</span></div>
+        <div class="pipe-step done"><div class="pipe-num">2</div><span class="pipe-name">Intent</span><span class="pipe-status">意图 ✓</span></div>
+        <div class="pipe-step done"><div class="pipe-num">3</div><span class="pipe-name">Goal</span><span class="pipe-status">目标 ✓</span></div>
+        <div class="pipe-step done"><div class="pipe-num">4</div><span class="pipe-name">Analyze</span><span class="pipe-status">分析 ✓</span></div>
+        <div class="pipe-step active"><div class="pipe-num">5</div><span class="pipe-name">Plan</span><span class="pipe-status">计划 ◉</span></div>
+        <div class="pipe-step"><div class="pipe-num">6</div><span class="pipe-name">Execute</span><span class="pipe-status">执行 ○</span></div>
+        <div class="pipe-step"><div class="pipe-num">7</div><span class="pipe-name">Evaluate</span><span class="pipe-status">评估 ○</span></div>
+        <div class="pipe-step"><div class="pipe-num">8</div><span class="pipe-name">Result</span><span class="pipe-status">结果 ○</span></div>
+      </div>
+    </div>
+
+    <!-- System Info -->
+    <div class="status-card animate-in" style="animation-delay:.15s">
+      <div class="card-header"><span class="card-title">系统信息</span></div>
+      <div class="sys-info">
+        <div class="sys-row">
+          <span class="sys-label">已激活智能体</span>
+          <span class="sys-val">12/60</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill blue" style="width:20%"></div></div>
+        <div class="sys-row" style="margin-top:6px">
+          <span class="sys-label">内存使用</span>
+          <span class="sys-val">45%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:45%"></div></div>
+        <div class="sys-row" style="margin-top:6px">
+          <span class="sys-label">CPU 使用</span>
+          <span class="sys-val">32%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill amber" style="width:32%"></div></div>
+        <div class="sys-row" style="margin-top:6px">
+          <span class="sys-label">执行时间</span>
+          <span class="sys-val" id="execTime">00:02:35</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BOTTOM BAR ===== -->
+<div class="bottombar">
+  <div class="bottombar-left">
+    <span>💡 使用说明：点击按键激活对应智能体，系统将根据任务需求自动推荐相关智能体并构建执行流程</span>
+  </div>
+  <div class="bottombar-right">
+    <span class="layer-dot"><span class="ldot c"></span>概念层 (C01-C30)</span>
+    <span class="layer-dot"><span class="ldot a"></span>动作层 (A01-A30)</span>
+    <span class="layer-dot"><span class="ldot s"></span>系统层 (实键功能)</span>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+let micActive = false;
+let currentLayer = 'concept';
+let pressedKeys = new Set();
+let execTimer = null;
+let elapsedSec = 155; // 00:02:35
+
+// ===== SPEECH RECOGNITION =====
+let recognition = null;
+function initSpeech() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return false;
+  recognition = new SR();
+  recognition.lang = 'zh-CN';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.onresult = (e) => {
+    let final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+    }
+    const ph = document.getElementById('inputPlaceholder');
+    if (final) {
+      ph.textContent = '"' + final + '"';
+      ph.style.color = 'var(--text-bright)';
+      clearActivated();
+      recognizeAgents(final);
+      stopMic();
+    } else {
+      ph.textContent = e.results[0][0].transcript;
+      ph.style.color = 'var(--cyan)';
+    }
+  };
+  recognition.onerror = () => { stopMic(); alert('语音识别出错，请检查麦克风权限。'); };
+  recognition.onend = () => { if (micActive) stopMic(); };
+  return true;
+}
+function startMic() {
+  if (!recognition && !initSpeech()) {
+    alert('您的浏览器不支持语音识别，请使用 Chrome 或 Edge。');
+    return;
+  }
+  micActive = true;
+  const btn = document.getElementById('micBtn');
+  const wave = document.getElementById('waveform');
+  const ph = document.getElementById('inputPlaceholder');
+  btn.classList.add('active');
+  wave.classList.add('active');
+  ph.textContent = '正在聆听...';
+  ph.style.color = 'var(--cyan)';
+  try { recognition.start(); } catch (e) {}
+}
+function stopMic() {
+  micActive = false;
+  const btn = document.getElementById('micBtn');
+  const wave = document.getElementById('waveform');
+  const ph = document.getElementById('inputPlaceholder');
+  btn.classList.remove('active');
+  wave.classList.remove('active');
+  if (ph.textContent === '正在聆听...' || ph.textContent.startsWith('"')) {}
+  else { ph.textContent = '请说出你的需求...'; ph.style.color = ''; }
+  try { recognition.stop(); } catch (e) {}
+}
+function toggleMic() {
+  micActive ? stopMic() : startMic();
+}
+
+// ===== TEXT INPUT =====
+function submitText() {
+  const input = document.getElementById('textInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  clearActivated();
+  document.getElementById('inputPlaceholder').textContent = '"' + text + '"';
+  document.getElementById('inputPlaceholder').style.color = 'var(--text-bright)';
+  document.getElementById('execOutput').style.display = 'none';
+  recognizeAgents(text);
+}
+// ===== EXAMPLE CLICK =====
+function useExample(el) {
+  clearActivated();
+  const text = el.textContent.replace(/"/g, '');
+  document.getElementById('inputPlaceholder').textContent = '"' + text + '"';
+  document.getElementById('inputPlaceholder').style.color = 'var(--text-bright)';
+  recognizeAgents(text);
+}
+
+// ===== LAYER SWITCH =====
+function switchLayer(layer, tabEl) {
+  currentLayer = layer;
+  document.querySelectorAll('.layer-tab').forEach(t => t.classList.remove('active'));
+  tabEl.classList.add('active');
+
+  document.querySelectorAll('#keyboardArea .key').forEach(k => {
+    const isConcept = k.classList.contains('concept');
+    const isAction = k.classList.contains('action');
+    const isSystem = k.classList.contains('system');
+    const hasBadge = k.dataset.badge && (k.dataset.badge.startsWith('C') || k.dataset.badge.startsWith('A'));
+
+    if (layer === 'concept') {
+      k.style.display = (!isAction && !isSystem) ? '' : 'none';
+    } else if (layer === 'action') {
+      k.style.display = (!isConcept && !isSystem) ? '' : 'none';
+    } else {
+      k.style.display = '';
+    }
+    // Always show EXECUTE and special keys
+    if (k.classList.contains('key-exec') || k.classList.contains('key-space') ||
+        k.dataset.key === 'Escape' || k.dataset.key === 'Backspace') {
+      k.style.display = '';
+    }
+  });
+}
+
+// ===== TOP BAR =====
+function showLayout() {
+  showHelpPanel(`
+    <b>⌨ 键盘布局说明</b><br/><br/>
+    <b>概念层 (C01-C30)</b> — 描述"是什么"<br/>
+    &nbsp;&nbsp;如：Agent、Goal、Task、Intent、Context...<br/><br/>
+    <b>动作层 (A01-A30)</b> — 描述"做什么"<br/>
+    &nbsp;&nbsp;如：Create、Analyze、Execute、Predict...<br/><br/>
+    <b>系统层 (S1-S8)</b> — 功能控制键<br/>
+    &nbsp;&nbsp;如：切换层、执行工作流、保存配置<br/><br/>
+    点击左侧层标签可切换显示对应按键
+  `);
+}
+function showTheme() {
+  showHelpPanel(`
+    <b>🎨 主题切换</b><br/><br/>
+    当前主题：<b>深空暗色</b>（默认）<br/><br/>
+    • 深空暗色 — 当前<br/>
+    • 极光青蓝 — 青色主调<br/>
+    • 落日琥珀 — 暖色主调<br/>
+    • 樱花淡粉 — 粉色主调<br/><br/>
+    <span style="color:var(--text-dim)">更多主题开发中...</span>
+  `);
+}
+function showSettings() {
+  showHelpPanel(`
+    <b>⚙ 设置</b><br/><br/>
+    • 语音识别语言：中文（普通话）<br/>
+    • 最大匹配智能体数：12<br/>
+    • 执行流程动画：开启<br/>
+    • 自动执行：关闭<br/><br/>
+    <span style="color:var(--text-dim)">更多设置开发中...</span>
+  `);
+}
+function showHelp() {
+  showHelpPanel(`
+    <b>❓ 使用帮助</b><br/><br/>
+    <b>输入方式</b><br/>
+    🎤 点击麦克风语音输入<br/>
+    ✏️ 在输入框输入文字按回车<br/>
+    📋 点击示例快速体验<br/><br/>
+    <b>智能体匹配</b><br/>
+    输入后系统自动从 60 个智能体中<br/>
+    匹配最相关的组成多智能体团队<br/><br/>
+    <b>执行工作流</b><br/>
+    点击 <b>AGENT EXECUTE</b> 执行<br/>
+    查看每个智能体的贡献和输出结果
+  `);
+}
+let helpVisible = false;
+function showHelpPanel(html) {
+  let panel = document.getElementById('helpPanel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'helpPanel';
+    panel.style.cssText = `
+      position:fixed;top:54px;right:12px;width:320px;max-height:400px;overflow-y:auto;
+      background:var(--bg-card);border:1px solid var(--border-glow);border-radius:var(--radius);
+      padding:14px;z-index:1000;font-size:12px;line-height:1.7;color:var(--text);
+      box-shadow:0 8px 32px rgba(0,0,0,.6);animation:fadeInUp .2s ease-out;
+    `;
+    document.body.appendChild(panel);
+    document.addEventListener('click', e => {
+      if (panel.style.display !== 'none' && !panel.contains(e.target) && !e.target.closest('.tb-btn')) {
+        panel.style.display = 'none';
+      }
+    });
+  }
+  panel.innerHTML = html + '<br/><br/><button onclick="this.parentElement.style.display=\'none\'" style="padding:4px 12px;background:var(--blue);border:none;border-radius:4px;color:#fff;cursor:pointer;font-size:11px">关闭</button>';
+  panel.style.display = 'block';
+}
+
+// ===== KEYBOARD MODE =====
+let kbdMode = 'agent';
+
+function switchKbdMode(mode) {
+  kbdMode = mode;
+  document.getElementById('modeAgent').classList.toggle('active', mode === 'agent');
+  document.getElementById('modeType').classList.toggle('active', mode === 'type');
+  // Show/hide agent labels on keys
+  document.querySelectorAll('#keyboardArea .key').forEach(k => {
+    const cn = k.querySelector('.key-cn');
+    const fn = k.querySelector('.key-fn');
+    const badge = k.querySelector('.key-badge');
+    if (mode === 'type') {
+      if (cn) cn.style.display = 'none';
+      if (fn) fn.style.display = 'none';
+      if (badge) badge.style.display = 'none';
+    } else {
+      if (cn) cn.style.display = '';
+      if (fn) fn.style.display = '';
+      if (badge) badge.style.display = '';
+    }
+  });
+}
+
+// ===== KEY PRESS =====
+document.querySelectorAll('.key').forEach(key => {
+  key.addEventListener('mousedown', () => {
+    key.classList.add('pressed');
+    if (kbdMode === 'type') {
+      // Typing mode: insert key text into input
+      const letter = key.querySelector('.key-letter')?.textContent;
+      const input = document.getElementById('textInput');
+      if (letter && letter.length === 1 && input) {
+        input.focus();
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        input.value = input.value.slice(0, start) + letter + input.value.slice(end);
+        input.selectionStart = input.selectionEnd = start + 1;
+        input.focus();
+      } else if (key.dataset.key === 'Space' || key.dataset.key === ' ') {
+        input.value += ' ';
+        input.focus();
+      } else if (key.dataset.key === 'Backspace') {
+        input.value = input.value.slice(0, -1);
+        input.focus();
+      }
+      setTimeout(() => key.classList.remove('pressed'), 100);
+      return;
+    }
+
+    // Agent mode
+    const k = key.dataset.key || key.dataset.badge || '';
+    if ((k.startsWith('C') || k.startsWith('A')) && k.length <= 4) {
+      const icon = document.querySelector(`#agentIcons .agent-icon[data-agent-id="${k}"]`);
+      if (icon) {
+        icon.classList.add('lit');
+        icon.style.transition = 'none';
+        icon.style.boxShadow = '0 0 20px rgba(6,182,212,.6)';
+        setTimeout(() => {
+          icon.style.transition = '';
+          icon.style.boxShadow = '';
+        }, 400);
+      }
+    }
+    appendCommand(k, key.querySelector('.key-cn')?.textContent || k);
+  });
+  key.addEventListener('mouseup', () => key.classList.remove('pressed'));
+  key.addEventListener('mouseleave', () => key.classList.remove('pressed'));
+});
+
+// Keyboard support
+document.addEventListener('keydown', e => {
+  const keyMap = {
+    'Escape':'Escape','Tab':'Tab','Backspace':'Backspace','Enter':'Enter',
+    'ShiftLeft':'Shift','ShiftRight':'Shift','ControlLeft':'Ctrl',
+    'AltLeft':'Alt','CapsLock':'CapsLock','Space':' ',
+    'KeyQ':'q','KeyW':'w','KeyE':'e','KeyR':'r','KeyT':'t','KeyY':'y',
+    'KeyU':'u','KeyI':'i','KeyO':'o','KeyP':'p',
+    'KeyA':'a','KeyS':'s','KeyD':'d','KeyF':'f','KeyG':'g','KeyH':'h',
+    'KeyJ':'j','KeyK':'k','KeyL':'l',
+    'KeyZ':'z','KeyX':'x','KeyC':'c','KeyV':'v','KeyB':'b','KeyN':'n','KeyM':'m',
+  };
+  const mapped = keyMap[e.code];
+  if (mapped) {
+    const el = document.querySelector(`.key[data-key="${mapped}"]`);
+    if (el && !pressedKeys.has(mapped)) {
+      pressedKeys.add(mapped);
+      el.classList.add('pressed');
+      setTimeout(() => el.classList.remove('pressed'), 150);
+    }
+  }
+});
+document.addEventListener('keyup', e => {
+  const keyMap = {
+    'Escape':'Escape','Tab':'Tab','Backspace':'Backspace','Enter':'Enter',
+    'ShiftLeft':'Shift','ShiftRight':'Shift','ControlLeft':'Ctrl',
+    'AltLeft':'Alt','CapsLock':'CapsLock','Space':' ',
+    'KeyQ':'q','KeyW':'w','KeyE':'e','KeyR':'r','KeyT':'t','KeyY':'y',
+    'KeyU':'u','KeyI':'i','KeyO':'o','KeyP':'p',
+    'KeyA':'a','KeyS':'s','KeyD':'d','KeyF':'f','KeyG':'g','KeyH':'h',
+    'KeyJ':'j','KeyK':'k','KeyL':'l',
+    'KeyZ':'z','KeyX':'x','KeyC':'c','KeyV':'v','KeyB':'b','KeyN':'n','KeyM':'m',
+  };
+  const mapped = keyMap[e.code];
+  if (mapped) pressedKeys.delete(mapped);
+});
+
+// ===== AGENT DATA & MATCHING =====
+let agents = [];
+let agentKeywords = {};
+let activatedAgents = [];
+let activatedConcepts = [];
+let activatedActions = [];
+
+function initAgentData() {
+  fetch('/api/agents')
+    .then(r => r.json())
+    .then(data => {
+      agents = data;
+      buildAgentKeywords();
+    })
+    .catch(() => {});
+}
+
+function extractKw(text) {
+  const set = new Set();
+  // Split by Chinese delimiters
+  const parts = text.split(/[与,，、&\s]+/).filter(Boolean);
+  parts.forEach(p => {
+    set.add(p.toLowerCase());
+    // Add 2-char and 3-char substrings for Chinese
+    for (let i = 0; i < p.length - 1; i++) {
+      set.add(p.slice(i, i + 2));
+      if (i + 2 < p.length) set.add(p.slice(i, i + 3));
+    }
+  });
+  return set;
+}
+function buildAgentKeywords() {
+  agents.forEach(a => {
+    const kw = new Set();
+    kw.add(a.name.toLowerCase());
+    // Full description as keyword
+    if (a.description) kw.add(a.description.toLowerCase());
+    // Extracted sub-keywords from description
+    extractKw(a.description || '').forEach(w => kw.add(w));
+    kw.add(a.id.toLowerCase());
+    agentKeywords[a.id] = kw;
+  });
+}
+
+// Manual keyword→agent mapping for common Chinese terms
+const MANUAL_MAP = {
+  '分析': ['A04'], '洞察': ['A04'], '趋势': ['A08','A04'], '预测': ['A08'],
+  '生成': ['A09'], '创建': ['A01','A09'], '课件': ['A09','C04'], '报告': ['A09','C17'],
+  '搜索': ['A03'], '发现': ['A03'], '查找': ['A03'], '检索': ['A14'], '提取': ['A17'],
+  '比较': ['A07'], '对比': ['A07'], '规划': ['A05','C24'], '计划': ['A05','C24'],
+  '执行': ['A06'], '分类': ['A19'], '验证': ['A10'], '学习': ['A11'],
+  '目标': ['C02','C30'], '目的': ['C20','C02'], '意图': ['C20'],
+  '任务': ['C03'], '知识': ['C08'], '数据': ['C09'], '工具': ['C10'],
+  '记忆': ['C07'], '技能': ['C06'], '能力': ['C28'], '约束': ['C25'],
+  '优先级': ['C26'], '结果': ['C17'], '反馈': ['C18'], '状态': ['C05'],
+  '对象': ['C04'], '属性': ['C21'], '关系': ['C22'], '流程': ['C23'],
+  '上下文': ['C19'], '环境': ['C13'], '时间': ['C14'], '事件': ['C15'],
+  '规则': ['C16'], '资源': ['C11'], '决策': ['A23'], '协商': ['A24'],
+  '分派': ['A25'], '监控': ['A27'], '恢复': ['A28'], '优化': ['A22'],
+  '模拟': ['A21'], '评估': ['A10'], '理解': ['A16'], '更新': ['A12'],
+  '存储': ['A13'], '同步': ['A26'], '沟通': ['A15'], '分配': ['A30'],
+  '读取': ['A02'], '了解': ['A16'], '建议': ['A23','A22'],
+  '方案': ['C24','A05'], '策略': ['C24','A05'],
+  '考题': ['A04','C09'], '考试': ['A04'], '成绩': ['C17','C05'],
+  '写作': ['A09','A01'], '文章': ['A09'], '邮件': ['A15'],
+  '画': ['A09','A01'], '图片': ['A09'], '图像': ['A09','C04'],
+  '神话': ['A09','A01','C08'], '故事': ['A09','A01'], '传说': ['A09','C08'],
+  '盘古': ['A09','A01','C08','C20'], '开天地': ['A09','A01','C03','C01'],
+  '创作': ['A09','A01'], '创意': ['A09','C20'],
+  '女娲': ['A09','A01','C08','C20'], '补天': ['A09','A01','C03'],
+  '盘古|开天': ['A09','A01','C08','C01'],
+  '音乐': ['A09','A01','A01'], '歌曲': ['A09','A01'], '旋律': ['A09']
+};
+
+function matchAgents(text) {
+  if (!agents.length) return [];
+  const lower = text.toLowerCase();
+  const hits = {};
+
+  // Score from description keywords
+  agents.forEach(a => {
+    let score = 0;
+    const kws = agentKeywords[a.id];
+    kws.forEach(kw => { if (lower.includes(kw)) score++; });
+    if (score > 0 || (a.description && lower.includes(a.description.toLowerCase()))) hits[a.id] = { agent: a, score };
+  });
+
+  // Score from manual map
+  Object.keys(MANUAL_MAP).forEach(term => {
+    if (lower.includes(term)) {
+      MANUAL_MAP[term].forEach(id => {
+        if (hits[id]) hits[id].score += 3;
+        else {
+          const a = agents.find(x => x.id === id);
+          if (a) hits[id] = { agent: a, score: 3 };
+        }
+      });
+    }
+  });
+
+  return Object.values(hits).sort((a, b) => b.score - a.score).slice(0, 12);
+}
+
+function clearActivated() {
+  activatedAgents = [];
+  activatedConcepts = [];
+  activatedActions = [];
+  document.querySelectorAll('.key').forEach(el => {
+    el.classList.remove('activated');
+    el.style.borderColor = '';
+    el.style.boxShadow = '';
+  });
+  document.querySelectorAll('#agentIcons .agent-icon').forEach(el => el.classList.remove('lit'));
+  document.getElementById('agentCount').textContent = '等待输入...';
+  document.getElementById('centerOutput').style.display = 'none';
+}
+
+function recognizeAgents(text) {
+  lastInputText = text;
+  // Clear previous
+  document.querySelectorAll('.key.activated').forEach(el => el.classList.remove('activated'));
+  document.querySelectorAll('#agentIcons .agent-icon').forEach(el => el.classList.remove('lit'));
+
+  const matches = matchAgents(text);
+  activatedAgents = matches.map(m => m.agent);
+  activatedConcepts = activatedAgents.filter(a => a.type === 'concept');
+  activatedActions = activatedAgents.filter(a => a.type === 'action');
+  const matchedIds = new Set(activatedAgents.map(a => a.id));
+
+  // Persistently activate keyboard keys
+  document.querySelectorAll('.key[data-badge]').forEach(el => {
+    const badge = el.dataset.badge;
+    if (badge && (badge.startsWith('C') || badge.startsWith('A'))) {
+      if (matchedIds.has(badge)) {
+        el.classList.add('activated');
+        el.style.borderColor = badge.startsWith('C') ? 'var(--blue)' : 'var(--green)';
+        el.style.boxShadow = badge.startsWith('C')
+          ? '0 0 12px rgba(59,130,246,.4)'
+          : '0 0 12px rgba(34,197,94,.4)';
+      } else {
+        el.style.borderColor = '';
+        el.style.boxShadow = '';
+      }
+    }
+  });
+
+  // Light up agent icons
+  document.querySelectorAll('#agentIcons .agent-icon').forEach(el => {
+    el.classList.toggle('lit', matchedIds.has(el.dataset.agentId));
+  });
+
+  // Update agent count
+  const total = activatedAgents.length;
+  const con = activatedConcepts.length;
+  const act = activatedActions.length;
+  document.getElementById('agentCount').textContent =
+    `已激活 ${total} 个智能体（概念 ${con} + 动作 ${act}）`;
+
+  // Update status panel
+  document.querySelectorAll('.status-row')[0].querySelector('span:last-child').textContent = `(${total})`;
+  document.querySelectorAll('.status-row')[1].querySelector('span:last-child').textContent = `(${60 - total})`;
+
+  // Build pipeline from matched agents
+  if (total > 0) {
+    buildPipeline(text);
+    // Auto-step 1-4 (Understand → Intent → Goal → Analyze)
+    const steps = document.querySelectorAll('#pipeline .pipe-step');
+    steps.forEach((s, i) => {
+      s.className = 'pipe-step';
+      s.querySelector('.pipe-status').textContent = '○';
+      if (i < 4) {
+        s.className = 'pipe-step done';
+        s.querySelector('.pipe-status').textContent = '✓';
+      }
+    });
+    if (steps[4]) {
+      steps[4].className = 'pipe-step active';
+      steps[4].querySelector('.pipe-status').textContent = '◉';
+    }
+  }
+}
+
+function buildPipeline(inputText) {
+  const pipelineNames = [
+    { name: 'Understand', icon: '👂', desc: '理解输入' },
+    { name: 'Intent', icon: '🎯', desc: '识别意图' },
+    { name: 'Goal', icon: '🏁', desc: '定义目标' },
+    { name: 'Analyze', icon: '🔬', desc: '分析需求' },
+    { name: 'Plan', icon: '📋', desc: '制定计划' },
+    { name: 'Execute', icon: '⚡', desc: '执行任务' },
+    { name: 'Evaluate', icon: '✅', desc: '评估结果' },
+    { name: 'Result', icon: '📝', desc: '输出结果' }
+  ];
+  const container = document.getElementById('pipeline');
+  container.innerHTML = '';
+  pipelineNames.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'pipe-step';
+    div.innerHTML = `<div class="pipe-num">${i + 1}</div>
+      <span class="pipe-name">${p.icon} ${p.name}<br/><small style="color:var(--text-dim);font-size:10px">${p.desc}</small></span>
+      <span class="pipe-status">○</span>`;
+    // Show matched agents below pipeline step when available
+    if (i === 4) div.dataset.agents = JSON.stringify(activatedConcepts.map(a => a.name));
+    if (i === 5) div.dataset.agents = JSON.stringify(activatedActions.map(a => a.name));
+    container.appendChild(div);
+  });
+}
+
+let lastInputText = '';
+
+function simulateAgentWork(agentId, inputText) {
+  const topic = inputText.slice(0, 30);
+  const outputs = {
+    'C01': `分析任务类型，匹配最佳智能体组合（主题：${topic}...）`,
+    'C02': `定义目标：根据用户需求"${topic}..."生成完整结果`,
+    'C03': `拆解子任务：主题理解→内容规划→生成执行→输出呈现`,
+    'C04': `识别核心对象：${topic}相关实体与结构`,
+    'C05': `评估当前状态：已获取主题基础信息`,
+    'C06': `调用技能：内容生成、格式编排、输出渲染`,
+    'C07': `检索记忆库：历史相关内容模板`,
+    'C08': `查询知识库：${topic}相关领域知识`,
+    'C09': `处理数据：提取关键信息、结构化整理`,
+    'C10': `调用工具：渲染引擎、图表生成器、格式转换`,
+    'C11': `分配资源：计算资源优先用于内容生成`,
+    'C19': `构建上下文：${topic} + 全流程执行`,
+    'C20': `识别意图：用户希望围绕"${topic}"获得完整的生成结果`,
+    'C24': `制定计划：内容分析→结构设计→逐块生成→质量验证→输出`,
+    'A01': `创建输出框架：标题→摘要→主体→结论`,
+    'A02': `读取相关数据：与${topic}关联的背景资料`,
+    'A03': `搜索相关资源：${topic}相关内容与参考资料`,
+    'A04': `分析内容：${topic}的结构化分析与要点提取`,
+    'A05': `规划输出结构：按照逻辑层次组织内容`,
+    'A06': `执行内容生成：逐部分填充并完善`,
+    'A07': `比较不同角度：多维视角呈现${topic}`,
+    'A08': `推演后续方向：基于${topic}延伸相关洞察`,
+    'A09': `生成最终内容：${topic}的完整输出`,
+    'A10': `验证内容质量：检查逻辑、完整性和准确性`,
+    'A16': `解析用户需求：理解"${topic}"的核心诉求`,
+    'A17': `提取关键信息：从${topic}中提取核心要素`,
+    'A22': `优化输出结构：调整组织方式提升可读性`,
+    'A23': `决策：选择最适合的表达方式和输出格式`,
+    'A27': `监控生成质量：确保各部分内容完整一致`,
+  };
+  const fallbacks = {
+    'C12': `用户偏好：根据${topic}调整内容风格`,
+    'C13': `运行环境：浏览器端AI生成引擎`,
+    'C14': `时间约束：生成完整结果 < 30秒`,
+    'C15': `事件触发：用户输入"${topic}"`,
+    'C16': `规则应用：遵循内容生成规范`,
+    'C17': `预期产出：围绕${topic}的完整结果`,
+    'C18': '反馈机制：用户可对结果进行评分和修改',
+    'C21': `对象属性：${topic}相关的结构化描述`,
+    'C22': `关系映射：${topic}各要素之间的逻辑关联`,
+    'C23': '流程编排：理解→规划→生成→验证→输出',
+    'C25': `约束条件：输出需准确反映${topic}`,
+    'C26': '优先级排序：核心内容优先生成',
+    'C27': '置信度评估：基于匹配度 > 80%',
+    'C28': '能力范围：文本生成、内容分析、格式转换',
+    'C29': '身份边界：AI内容生成助手',
+    'C30': `客观标准：输出必须完整覆盖${topic}`,
+    'A11': '学习用户偏好：记录输出格式偏好',
+    'A12': '更新知识库：将新生成结果加入模板库',
+    'A13': '存储结果：保存到历史记录',
+    'A14': '检索参考：查找相似主题的优秀案例',
+    'A15': '沟通协调：同步各模块内容风格一致',
+    'A18': '转换格式：输出为结构化文本',
+    'A19': '分类标签：按主题、类型、风格分类',
+    'A20': '匹配资源：关联对应主题的参考素材',
+    'A21': '模拟测试：生成预览验证输出效果',
+    'A24': '协商调整：平衡内容深度和可读性',
+    'A25': '分派任务：分配各章节给不同内容模块',
+    'A26': '同步状态：更新生成进度报告',
+    'A28': '异常恢复：检测到内容缺失自动补充',
+    'A29': '自我进化：学习本次生成反馈优化下次',
+    'A30': '资源分配：按内容重要性分配生成算力',
+  };
+  return outputs[agentId] || fallbacks[agentId] || `${agentId} 正在处理${topic}...`;
+}
+
+function detectDomains(text) {
+  const domains = {
+    '故事|神话|传说|童话|寓言|女娲|盘古|西游记|红楼梦|三国|水浒': { type: 'story', label: '📖 故事创作' },
+    '画|图片|图像|插图|插画|绘图|素描|油画|水墨|漫画': { type: 'illustration', label: '🎨 图像生成' },
+    '分析|趋势|对比|预测|统计|数据|报告|调查': { type: 'analysis', label: '📊 数据分析' },
+    '课件|教学|课程|教案|课堂|讲解|知识点|考试': { type: 'courseware', label: '📚 教学课件' },
+    '代码|程序|网站|应用|函数|算法|bug|debug|前端|后端|API': { type: 'code', label: '💻 代码生成' },
+    '音乐|歌曲|旋律|作曲|编曲|歌词|演唱|乐器|钢琴|吉他': { type: 'music', label: '🎵 音乐创作' },
+    '文案|广告|营销|推广|宣传|海报|标语|品牌': { type: 'copywriting', label: '📢 文案营销' },
+    '翻译|英文|中文|日文|法文|翻译成': { type: 'translation', label: '🌐 翻译' },
+    '邮件|写信|通知|公告|邀请': { type: 'email', label: '📧 邮件通知' },
+    '总结|摘要|提炼|归纳|概括': { type: 'summary', label: '📝 内容总结' },
+    '方案|计划|策划|规划|proposal': { type: 'proposal', label: '📋 方案策划' },
+  };
+  const matched = [];
+  for (const [pattern, info] of Object.entries(domains)) {
+    const re = new RegExp(pattern);
+    if (re.test(text)) matched.push(info);
+  }
+  return matched.length > 0 ? matched : [{ type: 'general', label: '📄 内容生成' }];
+}
+
+function generateOutput(inputText) {
+  lastInputText = inputText;
+  const domains = detectDomains(inputText);
+  const blocks = [];
+
+  domains.forEach(domain => {
+    if (domain.type === 'story') {
+      const storyTitle = inputText;
+      const knownStories = {
+        '女娲|补天': {
+          title: '女娲补天',
+          lines: [
+            `传说在远古时期，水神共工与火神祝融争斗，共工战败后怒触不周山，`,
+            `导致天塌地陷，天河之水倾泻人间，洪水肆虐，生灵涂炭。`,
+            ``,
+            `女娲目睹人间惨状，决心炼五色石以补苍天。她历尽艰辛，`,
+            `于昆仑山之巅架起神火，历经九九八十一天，炼成三万六千五百零一块补天石。`,
+            ``,
+            `女娲一次次将炼好的石块托上九天，填补天空的裂痕。`,
+            `她的双手被炽热的石头烫伤，身躯因连日劳作日渐消瘦，但她从未放弃。`,
+            ``,
+            `终于，苍天补全，洪水消退，大地重归安宁。`,
+            `女娲又斩巨鳌四足立为天柱，天地从此稳固，万物得以复苏。`,
+          ]
+        },
+        '精卫|填海': {
+          title: '精卫填海',
+          lines: [
+            `传说炎帝的小女儿名叫女娃，一日在东海游玩时，`,
+            `不幸被滔天巨浪吞噬，永远沉入了冰冷的海底。`,
+            ``,
+            `女娃的魂魄不灭，化为一只美丽的精卫鸟，`,
+            `白喙赤足，头戴花纹，日夜在海上盘旋悲鸣。`,
+            ``,
+            `精卫痛恨大海夺去了她的生命，决心要将东海填平。`,
+            `她每日从西山衔来木石，展翅飞越千山万水，`,
+            `将一颗颗石子、一根根树枝投入汹涌的海浪中。`,
+            ``,
+            `大海嘲笑她："你这只小鸟，就算衔上一百年，也休想把我填平！"`,
+            `精卫坚定地回答："就算一千年、一万年，我也要坚持下去！"`,
+            ``,
+            `日复一日，年复一年，精卫从未停歇。`,
+            `她的坚韧感动了天地，后世称颂她为"誓鸟"、"志鸟"，`,
+            `寓意着不屈不挠、持之以恒的精神。`,
+          ]
+        },
+        '夸父|逐日': {
+          title: '夸父逐日',
+          lines: [
+            `远古时代，北方荒原上住着巨人夸父。`,
+            `他看见太阳每天东升西落，光辉万丈，`,
+            `心中涌起一个大胆的念头——他要追上太阳！`,
+            ``,
+            `夸父迈开巨人的步伐，朝着太阳的方向飞奔而去。`,
+            `他跨过高山，越过江河，大地在他的脚下震颤。`,
+            ``,
+            `追到禺谷时，夸父感到口渴难耐，`,
+            `他俯身喝干了黄河和渭水，仍不解渴，`,
+            `又向北奔去，想喝大泽的水。`,
+            ``,
+            `可惜，未到大泽，夸父便因极度干渴倒下了。`,
+            `他的身躯化为连绵的山脉，`,
+            `他最后抛出的手杖，化作一片茂密的桃林，`,
+            `为后人遮阴避暑，延续着他的勇气。`,
+          ]
+        },
+        '嫦娥|奔月': {
+          title: '嫦娥奔月',
+          lines: [
+            `相传后羿从西王母处求得不死灵药，`,
+            `交与妻子嫦娥保管。后羿的弟子逢蒙得知此事，`,
+            `趁后羿外出之日，持剑逼迫嫦娥交出仙药。`,
+            ``,
+            `嫦娥危急之中，取出仙药一口吞下。`,
+            `忽然，她的身体变得轻盈无比，缓缓飘离地面，`,
+            `穿过窗棂，直向云霄飞去。`,
+            ``,
+            `嫦娥落入了离人间最近的月宫之中。`,
+            `月宫清冷寂寥，只有玉兔相伴，桂树为邻。`,
+            `她常常遥望人间，思念着后羿。`,
+            ``,
+            `从此，每年八月十五月圆之夜，`,
+            `人们仰望明月，便能看到嫦娥的身影，`,
+            `这个传说也流传千年，成为中秋佳节的美好寓意。`,
+          ]
+        },
+        '大禹|治水': {
+          title: '大禹治水',
+          lines: [
+            `帝尧时期，洪水滔天，百姓流离失所。`,
+            `尧命鲧治水，鲧用堵截之法，九年而水不息。`,
+            `舜继位后，命鲧之子禹继续治水。`,
+            ``,
+            `禹总结父亲失败的教训，改堵为疏，`,
+            `率领民众开山凿渠，疏通九河，导流入海。`,
+            `他身执耒锸，带头劳作，三过家门而不入。`,
+            ``,
+            `十三年间，禹走遍天下，测量山川，`,
+            `终于平定洪水，使百姓得以安居乐业。`,
+            `他的功绩被万世传颂，后受舜禅让成为夏朝的开国之君。`,
+          ]
+        }
+      };
+
+      // Add dynamic story if not found
+      if (!matched) {
+        knownStories['盘古|开天'] = {
+          title: '盘古开天地',
+          lines: [
+            `天地混沌如鸡子，盘古生其中。万八千岁，天地开辟，阳清为天，阴浊为地。`,
+            `盘古在其中，一日九变，神于天，圣于地。`,
+            ``,
+            `天日高一丈，地日厚一丈，盘古日长一丈。`,
+            `如此万八千岁，天数极高，地数极深，盘古极长。`,
+            ``,
+            `盘古将死，其气化为风云，其声化为雷霆，`,
+            `左眼化为太阳，右眼化为月亮，`,
+            `四肢五体化为四极五岳，`,
+            `血液化为江河，筋脉化为道路，`,
+            `肌肤化为田土，发髭化为星辰，`,
+            `皮毛化为草木，齿骨化为金石，`,
+            `精髓化为珠玉，汗流化为雨泽。`,
+            ``,
+            `自此，盘古以身化万物，开创了天地宇宙。`,
+            `后世称颂盘古为"开辟之神"。`,
+          ]
+        };
+        matched = ['盘古', knownStories['盘古|开天']];
+      }
+      let matched = Object.entries(knownStories).find(([key]) => {
+        const patterns = key.split('|');
+        return patterns.some(p => inputText.includes(p));
+      });
+
+      const story = matched ? matched[1] : {
+        title: storyTitle,
+        lines: [
+          `根据您的请求"${storyTitle}"，为您创作以下故事：`,
+          ``,
+          `（这是一个动态生成的故事框架。您可以提供更具体的情节、`,
+          `人物或背景设定，我将为您完善完整的故事内容。）`,
+          ``,
+          `故事主题：${storyTitle}`,
+          `风格：根据题材自然适配`,
+          `篇幅：可根据需求调整`,
+        ]
+      };
+
+      blocks.push({
+        title: `📖 ${story.title}`,
+        lines: story.lines
+      });
+    }
+    if (domain.type === 'illustration') {
+      let theme = inputText.replace(/写|画|生成|给我|帮我|我要|一幅|一张|一个|的|故事|图片|图像/gi, '').replace(/并$/, '').trim() || inputText;
+      // Detect specific myth for richer description
+      const mythDetails = {
+        '女娲|补天': { comp: '女娲立于云端双手托举五色巨石，裂开的天穹透出霞光', color: '青赤黄白黑五色', vibe: '庄严神圣' },
+        '精卫|填海': { comp: '精卫鸟衔着木石飞越波涛汹涌的海面，远方夕阳映照', color: '青蓝与暖金交织', vibe: '悲壮坚毅' },
+        '夸父|逐日': { comp: '巨人夸父大步追逐天边的烈日，山川在他脚下显得渺小', color: '赤金与深红渐变', vibe: '雄浑壮阔' },
+        '嫦娥|奔月': { comp: '嫦娥衣袂飘飘飞向皎洁的明月，月宫桂树玉兔隐约可见', color: '银白月华与深蓝夜空', vibe: '清冷唯美' },
+        '大禹|治水': { comp: '大禹率领民众开山疏河，洪水奔涌中坚毅的身影', color: '土黄与苍青为主', vibe: '厚重坚毅' },
+      };
+      let detail = null;
+      for (const [key, val] of Object.entries(mythDetails)) {
+        if (key.split('|').some(p => inputText.includes(p))) { detail = val; break; }
+      }
+
+      const cleanPrompt = theme.length > 20 ? theme.slice(0, 20) + '...' : theme;
+      const lines = detail ? [
+        `━━ 画面描述 ━━`,
+        `【主题】${theme}`,
+        `【风格】中国风数字插画 / 传统水墨风格`,
+        `【构图】${detail.comp}`,
+        `【色调】以${detail.color}为主，层次丰富`,
+        `【氛围】${detail.vibe}，充满东方神话意境`,
+        ``,
+        `━━ 建议 Prompt ━━`,
+        `Chinese mythology story, ${cleanPrompt}, ${detail.comp.slice(0, 25)},`,
+        `classical Chinese painting style, ink wash,`,
+        `masterpiece, ethereal atmosphere, --ar 16:9`,
+      ] : [
+        `━━ 画面描述 ━━`,
+        `【主题】${theme}`,
+        `【风格】中国风数字插画 / 古典水墨风格`,
+        `【构图】画面以"${cleanPrompt}"为核心，传统东方美学构图`,
+        `【色调】五色体系，自然光影过渡，意境深远`,
+        `【氛围】契合主题的情感基调`,
+        ``,
+        `━━ 建议 Prompt ━━`,
+        `Traditional Chinese painting, ${cleanPrompt},`,
+        `classical composition, ink wash aesthetics,`,
+        `ethereal atmosphere, --ar 16:9`,
+      ];
+      blocks.push({ title: `🎨 图像生成描述`, lines });
+    }
+    if (domain.type === 'courseware') {
+      blocks.push({
+        title: `📚 教学课件`,
+        lines: [
+          `📌 章节 1：主题引入`,
+          `📌 章节 2：核心知识点讲解`,
+          `📌 章节 3：案例分析`,
+          `📌 章节 4：互动练习`,
+          `📌 章节 5：总结与拓展`,
+        ]
+      });
+    }
+    if (domain.type === 'analysis') {
+      blocks.push({
+        title: `📊 分析报告`,
+        lines: [
+          `📌 数据来源：用户输入 + 知识库`,
+          `📌 分析方法：结构化分析与趋势研判`,
+          `📌 核心发现：基于输入内容的关键洞察`,
+          `📌 建议方案：可执行的后续行动计划`,
+        ]
+      });
+    }
+    if (domain.type === 'code') {
+      blocks.push({
+        title: `💻 代码生成`,
+        lines: [
+          `📌 语言/框架：根据需求自动选择`,
+          `📌 功能模块：按输入描述拆解`,
+          `📌 代码结构：入口 → 核心逻辑 → 错误处理 → 测试`,
+          `📌 注释说明：关键步骤附带中文注释`,
+        ]
+      });
+    }
+    if (domain.type === 'music') {
+      const theme = inputText.replace(/写|生成|创作|制作|一首|一段|给我|帮我|的|音乐|歌曲/gi, '').trim() || inputText;
+      blocks.push({
+        title: `🎵 音乐创作描述`,
+        lines: [
+          `━━ 音乐构思 ━━`,
+          `【主题】${theme}`,
+          `【风格】根据主题适配：宏大叙事 / 空灵意境 / 激昂史诗`,
+          `【结构】引子 → 主旋律 → 发展 → 高潮 → 尾声`,
+          `【配器】中国民族乐器 + 管弦乐融合`,
+          `【氛围】契合神话传说的壮阔感与叙事性`,
+          ``,
+          `━━ 建议 Prompt (Suno AI / Udio) ━━`,
+          `Epic orchestral with Chinese traditional instruments,`,
+          `${theme}, mythical atmosphere,`,
+          `grand cinematic, emotional storytelling,`,
+          `slow build to climax, ethereal choir`,
+        ]
+      });
+    }
+    if (domain.type === 'copywriting') {
+      blocks.push({
+        title: `📢 文案营销`,
+        lines: [
+          `📌 目标受众：根据产品定位确定`,
+          `📌 核心卖点：提炼关键词`,
+          `📌 文案风格：根据品牌调性调整`,
+          `📌 发布渠道：适配不同平台格式`,
+        ]
+      });
+    }
+    if (domain.type === 'general') {
+      blocks.push({
+        title: `📄 内容生成`,
+        lines: [
+          `根据您的需求"${inputText}"，已调动 ${activatedAgents.length} 个智能体协作完成。`,
+          `涵盖：主题理解、内容规划、执行生成、质量验证。`,
+          `如需更详细的结果，请提供更多具体要求。`,
+        ]
+      });
+    }
+  });
+
+  return blocks;
+}
+
+function generateAgentOutput() {
+  let contextSec = activatedConcepts.map(a =>
+    `  <span class="out-agent">${a.id}</span> ${simulateAgentWork(a.id, lastInputText)}`
+  ).join('\n');
+  let actionSec = activatedActions.map(a =>
+    `  <span class="out-agent">${a.id}</span> ${simulateAgentWork(a.id, lastInputText)}`
+  ).join('\n');
+  const blocks = generateOutput(lastInputText);
+  return { contextSec, actionSec, blocks };
+}
+
+function executeWorkflow() {
+  const steps = document.querySelectorAll('#pipeline .pipe-step');
+  if (activatedAgents.length === 0) {
+    alert('请先输入需求以激活智能体团队');
+    return;
+  }
+
+  if (!lastInputText) {
+    lastInputText = document.getElementById('inputPlaceholder').textContent.replace(/"/g, '');
+  }
+
+  const output = document.getElementById('execOutput');
+  output.style.display = 'none';
+
+  const ph = document.getElementById('inputPlaceholder');
+  ph.textContent = `🤖 多智能体协作中... (${activatedAgents.length} 个智能体参与)`;
+  ph.style.color = 'var(--cyan)';
+
+  steps.forEach(s => { s.className = 'pipe-step'; s.querySelector('.pipe-status').textContent = '○'; });
+  let i = 0;
+  function runStep() {
+    if (i >= steps.length) { setTimeout(() => showCompletion(output), 300); return; }
+    steps[i].className = 'pipe-step done';
+    steps[i].querySelector('.pipe-status').textContent = '✓';
+    const stepNames = ['理解输入','识别意图','定义目标','分析需求','制定计划','执行任务','评估结果','输出结果'];
+    ph.textContent = `[${i + 1}/8] ${stepNames[i]}... (${activatedAgents.length} 个智能体协同)`;
+    i++;
+    if (i < steps.length) {
+      steps[i].className = 'pipe-step active';
+      steps[i].querySelector('.pipe-status').textContent = '◉';
+      setTimeout(runStep, 500 + Math.random() * 400);
+    } else {
+      setTimeout(() => showCompletion(output), 300);
+    }
+  }
+  runStep();
+}
+
+function showCompletion(output) {
+  const card = document.querySelector('.status-card');
+  card.style.borderColor = 'var(--green)';
+  card.style.boxShadow = '0 0 20px rgba(34,197,94,.3)';
+  setTimeout(() => {
+    card.style.borderColor = '';
+    card.style.boxShadow = '';
+  }, 2000);
+
+  const result = generateAgentOutput();
+
+  // Right panel: agent contributions
+  output.style.display = 'block';
+  output.innerHTML = `<div class="out-title">✅ 工作流执行完成</div>
+<div class="out-section"><div class="out-label">🧠 概念层智能体贡献</div>${result.contextSec || '  (暂无)'}</div>
+<div class="out-section"><div class="out-label">⚡ 动作层智能体贡献</div>${result.actionSec || '  (暂无)'}</div>`;
+
+  // Center panel: generated content
+  const co = document.getElementById('centerOutput');
+  const coc = document.getElementById('centerOutputContent');
+  co.style.display = 'block';
+  let html = '';
+  result.blocks.forEach((block, i) => {
+    if (i > 0) html += '<hr class="co-sep"/>';
+    html += `<div class="co-block-title">${block.title}</div>`;
+    html += `<div class="co-line">${block.lines.join('\n')}</div>`;
+  });
+  coc.innerHTML = html;
+
+  const domains = detectDomains(lastInputText);
+  const ph = document.getElementById('inputPlaceholder');
+  ph.textContent = `✅ ${domains.map(d => d.label).join(' + ')}完成！${activatedAgents.length} 个智能体协同`;
+  ph.style.color = 'var(--green)';
+}
+
+// ===== TIMER =====
+function tickTime() {
+  elapsedSec++;
+  const h = String(Math.floor(elapsedSec / 3600)).padStart(2, '0');
+  const m = String(Math.floor((elapsedSec % 3600) / 60)).padStart(2, '0');
+  const s = String(elapsedSec % 60).padStart(2, '0');
+  document.getElementById('execTime').textContent = `${h}:${m}:${s}`;
+}
+setInterval(tickTime, 1000);
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  initAgentData();
+  const ti = document.getElementById('textInput');
+  if (ti) ti.addEventListener('keydown', e => { if (e.key === 'Enter') submitText(); });
+  // Stagger keyboard rows
+  document.querySelectorAll('.kbd-row').forEach((row, i) => {
+    row.style.opacity = '0';
+    row.style.transform = 'translateY(10px)';
+    row.style.transition = `opacity .4s ease ${i * .06}s, transform .4s ease ${i * .06}s`;
+    setTimeout(() => {
+      row.style.opacity = '1';
+      row.style.transform = 'none';
+    }, 100);
+  });
+});
+
+// ===== COMMAND BUILDING (visual feedback) =====
+let commandBuffer = [];
+function appendCommand(code, label) {
+  commandBuffer.push({ code, label, time: Date.now() });
+  // Keep only last 10
+  if (commandBuffer.length > 10) commandBuffer.shift();
+  
+  // Show brief toast-like indicator near the input placeholder
+  const ph = document.getElementById('inputPlaceholder');
+  const prev = ph.textContent;
+  ph.textContent = `[${code}] ${label.split('\n')[0]}`;
+  ph.style.color = 'var(--cyan)';
+  clearTimeout(window._cmdToast);
+  window._cmdToast = setTimeout(() => {
+    ph.textContent = prev.includes('正在聆听') ? '正在聆听...' : '请说出你的需求...';
+    ph.style.color = micActive ? 'var(--cyan)' : '';
+  }, 1200);
+}
+</script>
+</body>
+</html>

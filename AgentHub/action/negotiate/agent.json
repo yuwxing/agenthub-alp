@@ -1,0 +1,7 @@
+{
+  "description": "Agent之间协调",
+  "name": "negotiate",
+  "id": "A24",
+  "avatar": "../../avatar/action-negotiate.png",
+  "type": "action"
+}

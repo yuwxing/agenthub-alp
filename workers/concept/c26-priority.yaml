@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c26-priority
+  labels:
+    alp-layer: concept
+    alp-id: "C26"
+spec:
+  runtime: openclaw
+  displayName: "Priority (C26)"
+  description: "决策排序"
+  skills:
+    - name: "priority-ranker"
+      source: nacos
+      ref: "aliyun/skills/priority-ranker@v1"
+    - name: "decision-matrix"
+      source: nacos
+      ref: "aliyun/skills/decision-matrix@v1"
+  mcpServers: []

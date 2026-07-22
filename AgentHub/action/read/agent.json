@@ -1,0 +1,7 @@
+{
+  "description": "读取已有数据",
+  "name": "read",
+  "id": "A02",
+  "avatar": "../../avatar/action-read.png",
+  "type": "action"
+}

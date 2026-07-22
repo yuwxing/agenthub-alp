@@ -1,0 +1,22 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c09-data
+  labels:
+    alp-layer: concept
+    alp-id: "C09"
+spec:
+  runtime: openclaw
+  displayName: "data (C09)"
+  description: "结构化与非结构化数据"
+  skills:
+    - name: data-query
+      source: nacos
+      ref: "aliyun/skills/data-query@v1"
+    - name: data-transform
+      source: nacos
+      ref: "aliyun/skills/data-transform@v1"
+    - name: data-validate
+      source: nacos
+      ref: "aliyun/skills/data-validate@v1"
+  mcpServers: []

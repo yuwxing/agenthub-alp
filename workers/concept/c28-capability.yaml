@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c28-capability
+  labels:
+    alp-layer: concept
+    alp-id: "C28"
+spec:
+  runtime: openclaw
+  displayName: "Capability (C28)"
+  description: "Agent拥有的可执行能力集合"
+  skills:
+    - name: "capability-mapper"
+      source: nacos
+      ref: "aliyun/skills/capability-mapper@v1"
+    - name: "skill-auditor"
+      source: nacos
+      ref: "aliyun/skills/skill-auditor@v1"
+  mcpServers: []

@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a24-negotiate
+  labels:
+    alp-layer: action
+    alp-id: "A24"
+spec:
+  runtime: openclaw
+  displayName: "negotiate (A24)"
+  description: "在Agent之间协调并达成共识"
+  skills:
+    - name: "negotiator"
+      source: nacos
+      ref: "aliyun/skills/negotiator@v1"
+    - name: "consensus-builder"
+      source: nacos
+      ref: "aliyun/skills/consensus-builder@v1"
+  mcpServers: []

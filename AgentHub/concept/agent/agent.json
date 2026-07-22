@@ -1,0 +1,7 @@
+{
+  "description": "智能体自身的描述与元数据",
+  "name": "agent",
+  "id": "C01",
+  "avatar": "../../avatar/concept-agent.png",
+  "type": "concept"
+}

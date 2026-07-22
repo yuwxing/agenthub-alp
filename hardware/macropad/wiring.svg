@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" font-family="monospace">
+  <style>
+    text { font-size: 11px; fill: #333; }
+    .label { font-size: 10px; fill: #666; }
+    .title { font-size: 14px; font-weight: bold; fill: #000; }
+  </style>
+
+  <!-- Pico -->
+  <rect x="200" y="10" width="120" height="240" rx="8" fill="#f0f0f0" stroke="#ccc" stroke-width="2"/>
+  <rect x="210" y="18" width="100" height="20" rx="3" fill="#d4e6f1"/>
+  <text x="260" y="32" text-anchor="middle" font-size="10">Raspberry Pi Pico</text>
+
+  <!-- Pico pins (left side) -->
+  <text x="195" y="55" text-anchor="end" class="label">GP2 (Pin 4)</text>
+  <circle cx="200" cy="52" r="4" fill="#e74c3c"/>
+  <text x="195" y="75" text-anchor="end" class="label">GP3 (Pin 5)</text>
+  <circle cx="200" cy="72" r="4" fill="#e74c3c"/>
+  <text x="195" y="95" text-anchor="end" class="label">GP4 (Pin 6)</text>
+  <circle cx="200" cy="92" r="4" fill="#e74c3c"/>
+
+  <text x="195" y="125" text-anchor="end" class="label">GP5 (Pin 7)</text>
+  <circle cx="200" cy="122" r="4" fill="#3498db"/>
+  <text x="195" y="145" text-anchor="end" class="label">GP6 (Pin 8)</text>
+  <circle cx="200" cy="142" r="4" fill="#3498db"/>
+  <text x="195" y="165" text-anchor="end" class="label">GP7 (Pin 9)</text>
+  <circle cx="200" cy="162" r="4" fill="#3498db"/>
+  <text x="195" y="185" text-anchor="end" class="label">GP8 (Pin 10)</text>
+  <circle cx="200" cy="182" r="4" fill="#3498db"/>
+
+  <text x="195" y="220" text-anchor="end" class="label">GND</text>
+  <circle cx="200" cy="217" r="4" fill="#666"/>
+
+  <!-- Row labels -->
+  <text x="330" y="55" class="label" fill="#e74c3c">← R0</text>
+  <text x="330" y="75" class="label" fill="#e74c3c">← R1</text>
+  <text x="330" y="95" class="label" fill="#e74c3c">← R2</text>
+
+  <!-- Column labels -->
+  <text x="330" y="125" class="label" fill="#3498db">→ C0</text>
+  <text x="330" y="145" class="label" fill="#3498db">→ C1</text>
+  <text x="330" y="165" class="label" fill="#3498db">→ C2</text>
+  <text x="330" y="185" class="label" fill="#3498db">→ C3</text>
+
+  <!-- Key matrix area -->
+  <g transform="translate(380, 20)">
+    <text x="0" y="-5" class="title">3×4 键盘矩阵</text>
+
+    <!-- Row 0 -->
+    <rect x="0" y="10" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="16" y="31" text-anchor="middle" font-size="9">🎯</text>
+    <rect x="42" y="10" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="58" y="31" text-anchor="middle" font-size="9">🌐</text>
+    <rect x="84" y="10" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="100" y="31" text-anchor="middle" font-size="9">💾</text>
+    <rect x="126" y="10" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="142" y="31" text-anchor="middle" font-size="9">🗺️</text>
+
+    <!-- Row 1 -->
+    <rect x="0" y="52" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="16" y="73" text-anchor="middle" font-size="9">✨</text>
+    <rect x="42" y="52" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="58" y="73" text-anchor="middle" font-size="9">▶️</text>
+    <rect x="84" y="52" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="100" y="73" text-anchor="middle" font-size="9">📊</text>
+    <rect x="126" y="52" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="142" y="73" text-anchor="middle" font-size="9">🔍</text>
+
+    <!-- Row 2 -->
+    <rect x="0" y="94" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="16" y="115" text-anchor="middle" font-size="9">📝</text>
+    <rect x="42" y="94" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="58" y="115" text-anchor="middle" font-size="9">🤖</text>
+    <rect x="84" y="94" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="100" y="115" text-anchor="middle" font-size="9">🚀</text>
+    <rect x="126" y="94" width="32" height="32" rx="3" fill="#fff" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="142" y="115" text-anchor="middle" font-size="9">⚡</text>
+
+    <!-- Row labels -->
+    <text x="-25" y="32" class="label" fill="#e74c3c">R0</text>
+    <text x="-25" y="74" class="label" fill="#e74c3c">R1</text>
+    <text x="-25" y="116" class="label" fill="#e74c3c">R2</text>
+
+    <!-- Col labels -->
+    <text x="16" y="145" class="label" fill="#3498db" text-anchor="middle">C0</text>
+    <text x="58" y="145" class="label" fill="#3498db" text-anchor="middle">C1</text>
+    <text x="100" y="145" class="label" fill="#3498db" text-anchor="middle">C2</text>
+    <text x="142" y="145" class="label" fill="#3498db" text-anchor="middle">C3</text>
+  </g>
+
+  <!-- Diode detail -->
+  <g transform="translate(10, 280)">
+    <text x="0" y="0" class="title">二极管接法 (COL2ROW)</text>
+    <rect x="0" y="12" width="28" height="28" rx="3" fill="#fff" stroke="#999"/>
+    <text x="14" y="31" text-anchor="middle" font-size="9">K</text>
+    <line x1="28" y1="18" x2="50" y2="18" stroke="#e74c3c" stroke-width="1.5"/>
+    <polygon points="48,14 55,18 48,22" fill="#e74c3c"/>
+    <text x="38" y="14" font-size="8" fill="#666">Row</text>
+    <line x1="14" y1="40" x2="14" y2="55" stroke="#3498db" stroke-width="1.5"/>
+    <polygon points="10,53 14,60 18,53" fill="#3498db"/>
+    <text x="30" y="58" font-size="8" fill="#666">Col (+pull-up)</text>
+    <text x="60" y="22" font-size="8" fill="#666">← 二极管阳极接 Row</text>
+    <text x="60" y="35" font-size="8" fill="#666">   阴极接 Col →</text>
+    <text x="0" y="80" font-size="10" fill="#333">每键: 开关 + 1N4148 串联</text>
+    <text x="0" y="95" font-size="10" fill="#333">二极管方向: 阴极→Col, 阳极→Row</text>
+  </g>
+</svg>

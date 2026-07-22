@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a17-extract
+  labels:
+    alp-layer: action
+    alp-id: "A17"
+spec:
+  runtime: openclaw
+  displayName: "extract (A17)"
+  description: "从数据源获取并提取关键信息"
+  skills:
+    - name: "information-extractor"
+      source: nacos
+      ref: "aliyun/skills/information-extractor@v1"
+    - name: "data-miner"
+      source: nacos
+      ref: "aliyun/skills/data-miner@v1"
+  mcpServers: []

@@ -1,0 +1,7 @@
+{
+  "description": "智能体具备的能力",
+  "name": "skill",
+  "id": "C06",
+  "avatar": "../../avatar/concept-skill.png",
+  "type": "concept"
+}

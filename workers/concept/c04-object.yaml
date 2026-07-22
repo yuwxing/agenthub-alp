@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c04-object
+  labels:
+    alp-layer: concept
+    alp-id: "C04"
+spec:
+  runtime: openclaw
+  displayName: "object (C04)"
+  description: "被处理的实体"
+  skills:
+    - name: entity-recognition
+      source: nacos
+      ref: "aliyun/skills/entity-recognition@v1"
+    - name: object-modeling
+      source: nacos
+      ref: "aliyun/skills/object-modeling@v1"
+  mcpServers: []

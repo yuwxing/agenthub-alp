@@ -1,0 +1,7 @@
+{
+  "description": "可执行的工作单元",
+  "name": "task",
+  "id": "C03",
+  "avatar": "../../avatar/concept-task.png",
+  "type": "concept"
+}

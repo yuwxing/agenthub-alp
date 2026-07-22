@@ -1,0 +1,7 @@
+{
+  "description": "人类用户的画像与偏好",
+  "name": "user",
+  "id": "C12",
+  "avatar": "../../avatar/concept-user.png",
+  "type": "concept"
+}

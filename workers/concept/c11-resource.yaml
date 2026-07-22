@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c11-resource
+  labels:
+    alp-layer: concept
+    alp-id: "C11"
+spec:
+  runtime: openclaw
+  displayName: "resource (C11)"
+  description: "可调用的能力与资产"
+  skills:
+    - name: resource-discovery
+      source: nacos
+      ref: "aliyun/skills/resource-discovery@v1"
+    - name: capacity-planning
+      source: nacos
+      ref: "aliyun/skills/capacity-planning@v1"
+  mcpServers: []

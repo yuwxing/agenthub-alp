@@ -1,0 +1,7 @@
+{
+  "name": "identity",
+  "description": "智能体的唯一标识与人格边界；用于多智能体系统中区分Agent",
+  "avatar": "../../avatar/concept-identity.png",
+  "type": "concept",
+  "id": "C29"
+}

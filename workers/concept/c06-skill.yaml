@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c06-skill
+  labels:
+    alp-layer: concept
+    alp-id: "C06"
+spec:
+  runtime: openclaw
+  displayName: "skill (C06)"
+  description: "智能体具备的能力"
+  skills:
+    - name: skill-registry
+      source: nacos
+      ref: "aliyun/skills/skill-registry@v1"
+    - name: capability-query
+      source: nacos
+      ref: "aliyun/skills/capability-query@v1"
+  mcpServers: []

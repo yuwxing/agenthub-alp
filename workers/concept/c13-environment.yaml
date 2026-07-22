@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c13-environment
+  labels:
+    alp-layer: concept
+    alp-id: "C13"
+spec:
+  runtime: openclaw
+  displayName: "environment (C13)"
+  description: "运行环境与上下文"
+  skills:
+    - name: environment-scan
+      source: nacos
+      ref: "aliyun/skills/environment-scan@v1"
+    - name: context-awareness
+      source: nacos
+      ref: "aliyun/skills/context-awareness@v1"
+  mcpServers: []

@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a06-execute
+  labels:
+    alp-layer: action
+    alp-id: "A06"
+spec:
+  runtime: openclaw
+  displayName: "execute (A06)"
+  description: "执行任务"
+  skills:
+    - name: command-executor
+      source: nacos
+      ref: "aliyun/skills/command-executor@v1"
+    - name: pipeline-runner
+      source: nacos
+      ref: "aliyun/skills/pipeline-runner@v1"
+  mcpServers: []

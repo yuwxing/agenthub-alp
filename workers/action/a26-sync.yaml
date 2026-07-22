@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a26-sync
+  labels:
+    alp-layer: action
+    alp-id: "A26"
+spec:
+  runtime: openclaw
+  displayName: "sync (A26)"
+  description: "同步并更新各节点状态，确保一致性"
+  skills:
+    - name: "state-synchronizer"
+      source: nacos
+      ref: "aliyun/skills/state-synchronizer@v1"
+    - name: "consistency-checker"
+      source: nacos
+      ref: "aliyun/skills/consistency-checker@v1"
+  mcpServers: []

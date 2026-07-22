@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c16-rule
+  labels:
+    alp-layer: concept
+    alp-id: "C16"
+spec:
+  runtime: openclaw
+  displayName: "Rule (C16)"
+  description: "业务规则与逻辑约束"
+  skills:
+    - name: "rule-engine"
+      source: nacos
+      ref: "aliyun/skills/rule-engine@v1"
+    - name: "constraint-checker"
+      source: nacos
+      ref: "aliyun/skills/constraint-checker@v1"
+  mcpServers: []

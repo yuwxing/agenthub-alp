@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a28-recover
+  labels:
+    alp-layer: action
+    alp-id: "A28"
+spec:
+  runtime: openclaw
+  displayName: "recover (A28)"
+  description: "处理异常并执行故障恢复流程"
+  skills:
+    - name: "error-handler"
+      source: nacos
+      ref: "aliyun/skills/error-handler@v1"
+    - name: "recovery-manager"
+      source: nacos
+      ref: "aliyun/skills/recovery-manager@v1"
+  mcpServers: []

@@ -1,0 +1,7 @@
+{
+  "description": "从数据获取信息",
+  "name": "extract",
+  "id": "A17",
+  "avatar": "../../avatar/action-extract.png",
+  "type": "action"
+}

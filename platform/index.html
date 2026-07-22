@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentHub OS — 智能体协同操作平台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <!-- ═══ Header ═══ -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">🧠</div>
+      <h1>AgentHub OS</h1>
+      <span class="ver">v1.0</span>
+    </div>
+    <div class="header-center">
+      <span class="sb-icon">🔍</span>
+      <input type="text" id="search" placeholder="搜索智能体…" oninput="filterAgents()">
+    </div>
+    <div class="header-right">
+      <span class="badge" id="agentCount">0</span>
+      <span class="badge-label">Agents</span>
+      <span class="status-dot"></span>
+    </div>
+  </header>
+
+  <!-- ═══ Main Layout ═══ -->
+  <div class="main-layout">
+
+    <!-- ═══ Left: Agent Library ═══ -->
+    <aside class="panel-left">
+      <div class="panel-title">📚 Agent Library</div>
+      <div class="panel-subtitle">60 基础智能体</div>
+      <div class="tabs">
+        <button class="tab active" data-type="concept" onclick="switchTab('concept')">概念</button>
+        <button class="tab" data-type="action" onclick="switchTab('action')">动作</button>
+      </div>
+      <div class="agent-list" id="agentGrid"></div>
+    </aside>
+
+    <!-- ═══ Center: Agent Brain ═══ -->
+    <main class="panel-center">
+      <!-- Input -->
+      <div class="brain-input">
+        <div class="bi-header">
+          <span class="bi-icon">🧠</span>
+          <span>Agent Brain — 输入需求</span>
+        </div>
+        <div class="bi-body">
+          <textarea id="taskInput" placeholder="描述你的任务需求，例如：「分析学生英语成绩，生成个性化学习计划并分配练习任务」" rows="3"></textarea>
+          <div class="bi-actions">
+            <button class="btn-primary" onclick="generateTeam()">✨ 自动生成 Agent 团队</button>
+            <button class="btn-secondary" onclick="clearBrain()">清空</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team -->
+      <div class="brain-team" id="brainTeam">
+        <div class="bt-header">
+          <span>🤖 Agent 团队</span>
+          <span class="bt-hint" id="teamHint">输入需求后自动推荐</span>
+        </div>
+        <div class="bt-body" id="teamBody">
+          <div class="bt-empty">输入上方需求，系统将自动组建最优智能体团队</div>
+        </div>
+      </div>
+
+      <!-- Execution -->
+      <div class="brain-exec" id="brainExec">
+        <div class="be-header">
+          <span>⚡ 执行过程</span>
+          <span class="be-status" id="execStatus">就绪</span>
+        </div>
+        <div class="be-body" id="execBody">
+          <div class="be-empty">等待执行…</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══ Right: Agent Detail ═══ -->
+    <aside class="panel-right">
+      <div class="panel-title" id="detailTitle">ℹ️ Agent 详情</div>
+      <div id="detailContent" class="detail-root">
+        <div class="dr-placeholder">
+          <div class="drp-icon">👈</div>
+          <p>从左侧选择一个智能体</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ═══ Bottom: Runtime Console ═══ -->
+  <footer class="console">
+    <div class="console-tabs">
+      <button class="ctab active" onclick="switchConsole(this,'log')">📋 日志</button>
+        <button class="ctab" onclick="switchConsole(this,'chain')">🔗 调用链</button>
+        <button class="ctab" onclick="switchConsole(this,'result')">📊 结果</button>
+    </div>
+    <div class="console-body" id="consoleBody">
+      <div class="console-log">系统就绪。选择智能体或输入需求开始协作。</div>
+    </div>
+  </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

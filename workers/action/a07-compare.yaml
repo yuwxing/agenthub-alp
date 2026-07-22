@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a07-compare
+  labels:
+    alp-layer: action
+    alp-id: "A07"
+spec:
+  runtime: openclaw
+  displayName: "compare (A07)"
+  description: "比较与差异分析"
+  skills:
+    - name: diff-analyzer
+      source: nacos
+      ref: "aliyun/skills/diff-analyzer@v1"
+    - name: comparison-engine
+      source: nacos
+      ref: "aliyun/skills/comparison-engine@v1"
+  mcpServers: []

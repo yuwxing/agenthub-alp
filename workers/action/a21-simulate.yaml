@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a21-simulate
+  labels:
+    alp-layer: action
+    alp-id: "A21"
+spec:
+  runtime: openclaw
+  displayName: "simulate (A21)"
+  description: "预测场景结果与假设分析"
+  skills:
+    - name: "scenario-simulator"
+      source: nacos
+      ref: "aliyun/skills/scenario-simulator@v1"
+    - name: "whatif-analyzer"
+      source: nacos
+      ref: "aliyun/skills/whatif-analyzer@v1"
+  mcpServers: []

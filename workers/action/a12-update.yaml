@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a12-update
+  labels:
+    alp-layer: action
+    alp-id: "A12"
+spec:
+  runtime: openclaw
+  displayName: "update (A12)"
+  description: "更新现有数据"
+  skills:
+    - name: data-updater
+      source: nacos
+      ref: "aliyun/skills/data-updater@v1"
+    - name: state-modifier
+      source: nacos
+      ref: "aliyun/skills/state-modifier@v1"
+  mcpServers: []

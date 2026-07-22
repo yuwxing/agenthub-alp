@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c15-event
+  labels:
+    alp-layer: concept
+    alp-id: "C15"
+spec:
+  runtime: openclaw
+  displayName: "event (C15)"
+  description: "发生的事件与触发"
+  skills:
+    - name: event-detection
+      source: nacos
+      ref: "aliyun/skills/event-detection@v1"
+    - name: trigger-manager
+      source: nacos
+      ref: "aliyun/skills/trigger-manager@v1"
+  mcpServers: []

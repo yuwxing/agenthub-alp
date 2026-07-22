@@ -1,0 +1,7 @@
+{
+  "description": "创建新实体",
+  "name": "create",
+  "id": "A01",
+  "avatar": "../../avatar/action-create.png",
+  "type": "action"
+}

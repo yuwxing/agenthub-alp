@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a05-plan
+  labels:
+    alp-layer: action
+    alp-id: "A05"
+spec:
+  runtime: openclaw
+  displayName: "plan (A05)"
+  description: "制定执行计划"
+  skills:
+    - name: workflow-generator
+      source: nacos
+      ref: "aliyun/skills/workflow-generator@v1"
+    - name: scheduler
+      source: nacos
+      ref: "aliyun/skills/scheduler@v1"
+  mcpServers: []

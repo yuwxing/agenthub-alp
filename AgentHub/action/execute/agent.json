@@ -1,0 +1,7 @@
+{
+  "description": "执行任务",
+  "name": "execute",
+  "id": "A06",
+  "avatar": "../../avatar/action-execute.png",
+  "type": "action"
+}

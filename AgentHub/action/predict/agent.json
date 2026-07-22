@@ -1,0 +1,7 @@
+{
+  "description": "预测未来趋势",
+  "name": "predict",
+  "id": "A08",
+  "avatar": "../../avatar/action-predict.png",
+  "type": "action"
+}

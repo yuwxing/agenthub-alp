@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: a02-read
+  labels:
+    alp-layer: action
+    alp-id: "A02"
+spec:
+  runtime: openclaw
+  displayName: "read (A02)"
+  description: "读取已有数据"
+  skills:
+    - name: data-reader
+      source: nacos
+      ref: "aliyun/skills/data-reader@v1"
+    - name: document-parser
+      source: nacos
+      ref: "aliyun/skills/document-parser@v1"
+  mcpServers: []

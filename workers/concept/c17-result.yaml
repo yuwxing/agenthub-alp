@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c17-result
+  labels:
+    alp-layer: concept
+    alp-id: "C17"
+spec:
+  runtime: openclaw
+  displayName: "Result (C17)"
+  description: "执行结果与产出"
+  skills:
+    - name: "result-aggregator"
+      source: nacos
+      ref: "aliyun/skills/result-aggregator@v1"
+    - name: "output-formatter"
+      source: nacos
+      ref: "aliyun/skills/output-formatter@v1"
+  mcpServers: []

@@ -1,0 +1,19 @@
+apiVersion: agentteams.io/v1
+kind: Worker
+metadata:
+  name: c23-process
+  labels:
+    alp-layer: concept
+    alp-id: "C23"
+spec:
+  runtime: openclaw
+  displayName: "Process (C23)"
+  description: "连续任务链"
+  skills:
+    - name: "process-modeler"
+      source: nacos
+      ref: "aliyun/skills/process-modeler@v1"
+    - name: "workflow-designer"
+      source: nacos
+      ref: "aliyun/skills/workflow-designer@v1"
+  mcpServers: []
