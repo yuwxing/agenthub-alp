@@ -521,20 +521,7 @@ html, body { height: 100%; background: var(--bg-deep); color: var(--text); font-
         <span class="card-title">AI 解析结果（将点亮相关智能体）</span>
         <span class="recognized-count" id="agentCount">已识别 12 个相关智能体</span>
       </div>
-      <div class="agent-icons" id="agentIcons">
-        <div class="agent-icon" data-agent-id="C01"><span class="ai-emoji">🧠</span>智能体</div>
-        <div class="agent-icon" data-agent-id="C02"><span class="ai-emoji">🎯</span>目标</div>
-        <div class="agent-icon" data-agent-id="C03"><span class="ai-emoji">📋</span>任务</div>
-        <div class="agent-icon" data-agent-id="C24"><span class="ai-emoji">🗺️</span>计划</div>
-        <div class="agent-icon" data-agent-id="C19"><span class="ai-emoji">🔍</span>上下文</div>
-        <div class="agent-icon" data-agent-id="C20"><span class="ai-emoji">💡</span>意图</div>
-        <div class="agent-icon" data-agent-id="A04"><span class="ai-emoji">📊</span>分析</div>
-        <div class="agent-icon" data-agent-id="A06"><span class="ai-emoji">⚡</span>执行</div>
-        <div class="agent-icon" data-agent-id="A03"><span class="ai-emoji">🔎</span>搜索</div>
-        <div class="agent-icon" data-agent-id="A09"><span class="ai-emoji">✏️</span>生成</div>
-        <div class="agent-icon" data-agent-id="A10"><span class="ai-emoji">✅</span>验证</div>
-        <div class="agent-icon" data-agent-id="A08"><span class="ai-emoji">📈</span>预测</div>
-      </div>
+      <div class="agent-icons" id="agentIcons"></div>
     </div>
 
     <!-- Agent Status -->
@@ -1010,7 +997,7 @@ function clearActivated() {
     el.style.borderColor = '';
     el.style.boxShadow = '';
   });
-  document.querySelectorAll('#agentIcons .agent-icon').forEach(el => el.classList.remove('lit'));
+  document.getElementById('agentIcons').innerHTML = '';
   document.getElementById('agentCount').textContent = '等待输入...';
   document.getElementById('centerOutput').style.display = 'none';
 }
@@ -1019,8 +1006,6 @@ function recognizeAgents(text) {
   lastInputText = text;
   // Clear previous
   document.querySelectorAll('.key.activated').forEach(el => el.classList.remove('activated'));
-  document.querySelectorAll('#agentIcons .agent-icon').forEach(el => el.classList.remove('lit'));
-
   const matches = matchAgents(text);
   activatedAgents = matches.map(m => m.agent);
   activatedConcepts = activatedAgents.filter(a => a.type === 'concept');
@@ -1044,9 +1029,27 @@ function recognizeAgents(text) {
     }
   });
 
-  // Light up agent icons
-  document.querySelectorAll('#agentIcons .agent-icon').forEach(el => {
-    el.classList.toggle('lit', matchedIds.has(el.dataset.agentId));
+  // Rebuild agent icons to match activated agents
+  const ic = document.getElementById('agentIcons');
+  ic.innerHTML = '';
+  const EMOJI_MAP = {
+    'C01':'🧠','C02':'🎯','C03':'👤','C04':'🏁','C05':'🎯','C06':'📋','C07':'📦','C08':'📊',
+    'C09':'🏷️','C10':'🌐','C11':'💡','C12':'🔗','C13':'🌍','C14':'⏰','C15':'📅','C16':'📏',
+    'C17':'✅','C18':'💬','C19':'🔍','C20':'🎯','C21':'🔧','C22':'🔄','C23':'📐','C24':'🗺️',
+    'C25':'🚧','C26':'📶','C27':'🔬','C28':'🧰','C29':'🧩','C30':'🎯',
+    'A01':'✏️','A02':'📂','A03':'🔎','A04':'📊','A05':'⚡','A06':'⚖️','A07':'🔮','A08':'✅',
+    'A09':'🎨','A10':'🔄','A11':'💾','A12':'📖','A13':'💬','A14':'🤔','A15':'📤','A16':'🔄',
+    'A17':'📑','A18':'🔗','A19':'🧪','A20':'⚙️','A21':'🎲','A22':'🤝','A23':'📨','A24':'🔄',
+    'A25':'👁️','A26':'📡','A27':'🔄','A28':'🌱','A29':'📤','A30':'📋'
+  };
+  activatedAgents.forEach(a => {
+    const keyEl = document.querySelector(`.key[data-badge="${a.id}"]`);
+    const cn = keyEl ? (keyEl.querySelector('.key-cn')?.textContent || a.id) : a.id;
+    const div = document.createElement('div');
+    div.className = 'agent-icon lit';
+    div.dataset.agentId = a.id;
+    div.innerHTML = `<span class="ai-emoji">${EMOJI_MAP[a.id] || (a.type==='concept'?'🧠':'⚡')}</span>${cn.replace(/.*\n/, '')}`;
+    ic.appendChild(div);
   });
 
   // Update agent count
