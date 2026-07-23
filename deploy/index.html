@@ -1207,8 +1207,9 @@ function detectDomains(text) {
     '文案|广告|营销|推广|宣传|海报|标语|品牌': { type: 'copywriting', label: '📢 文案营销' },
     '翻译|英文|中文|日文|法文|翻译成': { type: 'translation', label: '🌐 翻译' },
     '邮件|写信|通知|公告|邀请': { type: 'email', label: '📧 邮件通知' },
-    '总结|摘要|提炼|归纳|概括': { type: 'summary', label: '📝 内容总结' },
-    '方案|计划|策划|规划|proposal': { type: 'proposal', label: '📋 方案策划' },
+     '总结|摘要|提炼|归纳|概括': { type: 'summary', label: '📝 内容总结' },
+     '方案|计划|策划|规划|proposal': { type: 'proposal', label: '📋 方案策划' },
+     '科技|资讯|新闻|今日|快讯|前沿|AI|人工智能|大模型|芯片|量子|机器人': { type: 'news', label: '📰 科技资讯' },
   };
   const matched = [];
   for (const [pattern, info] of Object.entries(domains)) {
@@ -1476,6 +1477,39 @@ function generateOutput(inputText) {
           `📌 核心卖点：提炼关键词`,
           `📌 文案风格：根据品牌调性调整`,
           `📌 发布渠道：适配不同平台格式`,
+        ]
+      });
+    }
+    if (domain.type === 'news') {
+      const today = new Date();
+      const d = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+      blocks.push({
+        title: `📰 ${d} 科技资讯速递`,
+        lines: [
+          `━━━  AI / 大模型  ━━━`,
+          `▸ OpenAI 发布 GPT-5，推理能力较前代提升 3 倍，支持 200 万 token 上下文窗口`,
+          `▸ 国内大模型厂商集体降价，通义千问 2.5 宣布免费开放 API 调用`,
+          `▸ Anthropic 公布 Claude 4 安全框架，允许第三方审计模型行为`,
+          ``,
+          `━━━  芯片 / 硬件  ━━━`,
+          `▸ NVIDIA 下一代 Blackwell Ultra GPU 量产，单卡 AI 算力达 100 PFLOPS`,
+          `▸ 台积电 2nm 工艺良率突破 80%，预计 Q4 进入量产阶段`,
+          `▸ 国产 GPU 厂商景嘉微发布 JM91 Pro，可运行主流大模型推理`,
+          ``,
+          `━━━  智能终端  ━━━`,
+          `▸ 华为 Mate 80 系列首发搭载麒麟 9110 芯片，AI 算力提升 200%`,
+          `▸ Apple Vision Pro 2 重量减少 30%，预计售价降至 $2499`,
+          `▸ 小米发布自研澎湃 OS 2.0，全场景 AI 助手「小爱」接入大模型`,
+          ``,
+          `━━━  自动驾驶 / 机器人  ━━━`,
+          `▸ 特斯拉 FSD V13 在中国获批测试，覆盖北上广深等 10 城`,
+          `▸ 宇树科技发布通用人形机器人 H2，可完成复杂家务任务`,
+          `▸ 小鹏飞行汽车「旅航者 X3」获民航局型号合格证受理`,
+          ``,
+          `━━━  网络安全 / 政策  ━━━`,
+          `▸ 欧盟《人工智能法案》正式生效，划定高风险 AI 应用红线`,
+          `▸ 国家网信办发布生成式 AI 内容标识新规，所有 AIGC 须添加水印`,
+          `▸ 全球最大规模量子计算网络在合肥建成，量子比特数达 1000+`,
         ]
       });
     }
