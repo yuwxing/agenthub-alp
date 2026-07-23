@@ -960,30 +960,37 @@ const MANUAL_MAP = {
 };
 
 function matchAgents(text) {
-  if (!agents.length) return [];
   const lower = text.toLowerCase();
   const hits = {};
 
-  // Score from description keywords
-  agents.forEach(a => {
-    let score = 0;
-    const kws = agentKeywords[a.id];
-    kws.forEach(kw => { if (lower.includes(kw)) score++; });
-    if (score > 0 || (a.description && lower.includes(a.description.toLowerCase()))) hits[a.id] = { agent: a, score };
-  });
+  const addAgent = (id, scoreInc) => {
+    if (!hits[id]) {
+      hits[id] = { agent: { id, type: id.startsWith('C') ? 'concept' : 'action' }, score: 0 };
+      // If agents API loaded, replace with real agent
+      const real = agents.find(x => x.id === id);
+      if (real) hits[id].agent = real;
+    }
+    hits[id].score += scoreInc;
+  };
 
-  // Score from manual map
+  // 1) Manual map matching (works even before API loads)
   Object.keys(MANUAL_MAP).forEach(term => {
     if (lower.includes(term)) {
-      MANUAL_MAP[term].forEach(id => {
-        if (hits[id]) hits[id].score += 3;
-        else {
-          const a = agents.find(x => x.id === id);
-          if (a) hits[id] = { agent: a, score: 3 };
-        }
-      });
+      MANUAL_MAP[term].forEach(id => addAgent(id, 3));
     }
   });
+
+  // 2) Description keyword matching (only if API loaded)
+  if (agents.length > 0) {
+    agents.forEach(a => {
+      let score = 0;
+      const kws = agentKeywords[a.id];
+      if (kws) kws.forEach(kw => { if (lower.includes(kw)) score++; });
+      if (score > 0 || (a.description && lower.includes(a.description.toLowerCase()))) {
+        addAgent(a.id, score);
+      }
+    });
+  }
 
   return Object.values(hits).sort((a, b) => b.score - a.score).slice(0, 12);
 }
@@ -1491,17 +1498,17 @@ function generateAgentOutput() {
 }
 
 function executeWorkflow() {
-  const steps = document.querySelectorAll('#pipeline .pipe-step');
+  const textInput = document.getElementById('textInput');
+  const placeholder = document.getElementById('inputPlaceholder');
+
+  // Auto-detect from text input if no agents activated yet
   if (activatedAgents.length === 0) {
-    // Auto-detect from text input if available
-    const textInput = document.getElementById('textInput');
-    const placeholder = document.getElementById('inputPlaceholder');
-    const text = textInput?.value.trim() || placeholder.textContent.replace(/"/g, '').replace('请说出你的需求...','').replace('正在聆听...','').trim();
-    if (text && !text.includes('请说出') && !text.includes('正在聆听')) {
+    const raw = textInput?.value.trim() || placeholder.textContent.replace(/"/g, '').replace('请说出你的需求...','').replace('正在聆听...','').trim();
+    if (raw && !raw.includes('请说出') && !raw.includes('正在聆听')) {
       clearActivated();
-      placeholder.textContent = '"' + text + '"';
+      placeholder.textContent = '"' + raw + '"';
       placeholder.style.color = 'var(--text-bright)';
-      recognizeAgents(text);
+      recognizeAgents(raw);
       document.getElementById('execOutput').style.display = 'none';
       if (textInput) textInput.value = '';
     } else {
@@ -1510,17 +1517,22 @@ function executeWorkflow() {
     }
   }
 
+  if (activatedAgents.length === 0) {
+    alert('无法匹配相关智能体，请尝试其他输入');
+    return;
+  }
+
   if (!lastInputText) {
-    lastInputText = document.getElementById('inputPlaceholder').textContent.replace(/"/g, '');
+    lastInputText = placeholder.textContent.replace(/"/g, '');
   }
 
   const output = document.getElementById('execOutput');
   output.style.display = 'none';
+  placeholder.textContent = `🤖 多智能体协作中... (${activatedAgents.length} 个智能体参与)`;
+  placeholder.style.color = 'var(--cyan)';
 
-  const ph = document.getElementById('inputPlaceholder');
-  ph.textContent = `🤖 多智能体协作中... (${activatedAgents.length} 个智能体参与)`;
-  ph.style.color = 'var(--cyan)';
-
+  // Re-query pipeline steps (buildPipeline may have replaced them in recognizeAgents)
+  let steps = document.querySelectorAll('#pipeline .pipe-step');
   steps.forEach(s => { s.className = 'pipe-step'; s.querySelector('.pipe-status').textContent = '○'; });
   let i = 0;
   function runStep() {
@@ -1528,7 +1540,7 @@ function executeWorkflow() {
     steps[i].className = 'pipe-step done';
     steps[i].querySelector('.pipe-status').textContent = '✓';
     const stepNames = ['理解输入','识别意图','定义目标','分析需求','制定计划','执行任务','评估结果','输出结果'];
-    ph.textContent = `[${i + 1}/8] ${stepNames[i]}... (${activatedAgents.length} 个智能体协同)`;
+    placeholder.textContent = `[${i + 1}/8] ${stepNames[i]}... (${activatedAgents.length} 个智能体协同)`;
     i++;
     if (i < steps.length) {
       steps[i].className = 'pipe-step active';
