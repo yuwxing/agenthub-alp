@@ -1044,11 +1044,12 @@ function recognizeAgents(text) {
   };
   activatedAgents.forEach(a => {
     const keyEl = document.querySelector(`.key[data-badge="${a.id}"]`);
-    const cn = keyEl ? (keyEl.querySelector('.key-cn')?.textContent || a.id) : a.id;
+    const cnHtml = keyEl?.querySelector('.key-cn')?.innerHTML || '';
+    const cn = cnHtml.includes('<br>') ? cnHtml.split('<br>')[1] : (cnHtml || a.id);
     const div = document.createElement('div');
     div.className = 'agent-icon lit';
     div.dataset.agentId = a.id;
-    div.innerHTML = `<span class="ai-emoji">${EMOJI_MAP[a.id] || (a.type==='concept'?'🧠':'⚡')}</span>${cn.replace(/.*\n/, '')}`;
+    div.innerHTML = `<span class="ai-emoji">${EMOJI_MAP[a.id] || (a.type==='concept'?'🧠':'⚡')}</span>${cn}`;
     ic.appendChild(div);
   });
 
@@ -1492,8 +1493,21 @@ function generateAgentOutput() {
 function executeWorkflow() {
   const steps = document.querySelectorAll('#pipeline .pipe-step');
   if (activatedAgents.length === 0) {
-    alert('请先输入需求以激活智能体团队');
-    return;
+    // Auto-detect from text input if available
+    const textInput = document.getElementById('textInput');
+    const placeholder = document.getElementById('inputPlaceholder');
+    const text = textInput?.value.trim() || placeholder.textContent.replace(/"/g, '').replace('请说出你的需求...','').replace('正在聆听...','').trim();
+    if (text && !text.includes('请说出') && !text.includes('正在聆听')) {
+      clearActivated();
+      placeholder.textContent = '"' + text + '"';
+      placeholder.style.color = 'var(--text-bright)';
+      recognizeAgents(text);
+      document.getElementById('execOutput').style.display = 'none';
+      if (textInput) textInput.value = '';
+    } else {
+      alert('请先输入需求以激活智能体团队');
+      return;
+    }
   }
 
   if (!lastInputText) {
